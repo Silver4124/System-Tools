@@ -1,0 +1,2087 @@
+<style>
+    :root{
+        --sidebar-color: #252526;
+        --content-color: #1e1e1e;
+        --accent: #007acc;
+        --text: #cccccc;
+        --perm-gold: #d7ba7d;
+    }
+    body, html { margin:0; padding:0; height:100%; overflow:hidden; color: var(--text); font-family: 'Segoe UI', sans-serif; }
+    .sidebar-title{
+        padding: 20px;
+        background: #333333;
+        font-size: 14px;
+        border-bottom: 1px solid #444;
+        color: #fff;
+    }
+    .menu-container{
+        flex-grow: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-top: 10px;
+        font-family: 'Consolas', monospace;
+        font-size: 13px;
+        scrollbar-width: none;
+    }
+    li{
+        padding: 8px 15px; 
+        cursor: pointer; 
+        transition: 0.2s; 
+        border-left: 3px solid transparent;
+    }
+    li:hover{ background: #37373d; border-left-color: var(--accent); color: #fff; }
+    code{ background: #2d2d2d; padding: 2px 5px; border-radius: 3px; color: var(--perm-gold); }
+    .tap{ background:#2d2d2d; padding:20px; border-radius:8px; border-left: 5px solid var(--accent); margin: 20px 0; }
+    .note{ margin-top:30px; padding:15px; background: rgba(0,122,204,0.1); border: 1px solid var(--accent); border-radius: 5px; }
+    .submenu{
+        display: none;
+        background: #1e1e1e;
+        padding-left: 20px;
+        border-left: 2px solid #444;
+        margin-bottom: 5px;
+    }
+    .submenu li{
+        font-size: 12px;
+        padding: 5px 10px;
+        color: #888;
+    }
+    .submenu li:hover{
+        color: var(--accent);
+        background: transparent;
+    }
+    .active-menu{
+        color: #fff !important;
+        border-left-color: var(--accent) !important;
+        background: #37373d;
+    }
+    .function-firm{
+        font-family: monospace;
+        background: #1a1a1a;
+        padding: 15px;
+        border-radius: 5px;
+        color: #d7ba7d;
+        border: 1px solid #333;
+    }
+    .function-example{
+        font-family: monospace;
+        background: #000;
+        padding: 15px;
+        border-radius: 5px;
+        color: #9cdcfe;
+        border: 1px solid #333;
+    }
+</style>
+<div style="width:100%; height:100%; display:flex;">
+    <div style="width:300px; height:100%; background-color: var(--sidebar-color); display: flex; flex-direction: column;">
+        <div class="sidebar-title">
+            <strong>System_Tools v1.0</strong> <br>
+            <small style="color: #888;">"BDay" Long Term Support</small>
+        </div>
+        <div class="menu-container" id="sidebar-scroll" style="width:100%; flex-grow:1; padding-top:10px; font-family:'Consolas', monospace; font-size: 13px;">
+            <ul style="list-style:none; padding:0; margin:0;">
+                <li onclick="load('intro')">Introducción</li>
+                <li onclick="load('setup')">Configuración & CRT-Free</li>
+                <li onclick="load('imports')">Sistema de ST_IMPORT</li>
+                <li onclick="load('defaults')">Funciones por defecto y definiciones</li>
+                <li onclick="load('tips')">Consejos comunes</li>
+                <li onclick="toggleMenu('sub-mem', 'memory', this)"><span>▸</span> Namespace memory</li>
+                <div id="sub-mem" class="submenu">
+                    <li onclick="load('mem_alloc')">alloc</li>
+                    <li onclick="load('mem_clloc')">clloc</li>
+                    <li onclick="load('mem_slloc')">slloc</li>
+                    <li onclick="load('mem_mlloc')">mlloc</li>
+                    <li onclick="load('mem_realloc')">realloc</li>
+                    <li onclick="load('mem_free')">free</li>
+                    <li onclick="load('mem_cmplloc')">cmplloc</li>
+                    <li onclick="load('mem_cnrlloc')">cnrlloc</li>
+                </div>
+                <li onclick="toggleMenu('sub-thr', 'thread', this)"><span>▸</span> Namespace thread</li>
+                <div id="sub-thr" class="submenu">
+                    <li onclick="load('thr_create')">create</li>
+                    <li onclick="load('thr_join')">join</li>
+                    <li onclick="load('thr_kill')">kill</li>
+                    <li onclick="load('thr_yiel')">yiel</li>
+                </div>
+                <li onclick="toggleMenu('sub-file', 'file', this)"><span>▸</span> Namespace file</li>
+                <div id="sub-file" class="submenu">
+                    <li onclick="load('file_enum_file_mode')">Enum file_mode</li>
+                    <li onclick="load('file_enum_seek_mode')">Enum seek_mode</li>
+                    <li onclick="load('file_enum_time_mode')">Enum time_mode</li>
+                    <li onclick="load('file_exist')">exist</li>
+                    <li onclick="load('file_opened_like')">opened_like</li>
+                    <li onclick="load('file_open')">open</li>
+                    <li onclick="load('file_copy')">copy</li>
+                    <li onclick="load('file_move')">move</li>
+                    <li onclick="load('file_parent')">parent</li>
+                    <li onclick="load('file_close')">close</li>
+                    <li onclick="load('file_remove')">remove</li>
+                    <li onclick="load('file_timestamp')">timestamp</li>
+                    <li onclick="load('file_read')">read</li>
+                    <li onclick="load('file_write')">write</li>
+                    <li onclick="load('file_size')">size</li>
+                    <li onclick="load('file_tell')">tell</li>
+                    <li onclick="load('file_seek')">seek</li>
+                    <li onclick="load('file_clear')">clear</li>
+                    <li onclick="load('file_folder')">folder</li>
+                    <li onclick="load('file_inside')">inside</li>
+                    <li onclick="load('file_is_folder')">is_folder</li>
+                    <li onclick="load('file_name')">name</li>
+                    <li onclick="load('file_extension')">extension</li>
+                    <li onclick="load('file_path')">path</li>
+                    <li onclick="load('file_root_this')">root_this</li>
+                    <li onclick="load('file_normalize')">normalize</li>
+                    <li onclick="load('file_apends')">apends</li>
+                    <li onclick="load('file_apendws')">apendws</li>
+                    <li onclick="load('file_apendc')">apendc</li>
+                    <li onclick="load('file_apendo')">apendo</li>
+                    <li onclick="load('file_gets')">gets</li>
+                    <li onclick="load('file_getws')">getws</li>
+                    <li onclick="load('file_getc')">getc</li>
+                    <li onclick="load('file_geto')">geto</li>
+                    <li onclick="load('file_to_date')">to_date</li>
+                    <li onclick="load('file_to_time')">to_time</li>
+                    <li onclick="load('file_days_until_2000')">days_until_2000</li>
+                </div>
+                <li onclick="toggleMenu('sub-snd', 'sound', this)"><span>▸</span> Namespace sound</li>
+                <div id="sub-snd" class="submenu">
+                    <li onclick="load('snd_create')">create</li>
+                    <li onclick="load('snd_reload')">reload</li>
+                    <li onclick="load('snd_play')">play</li>
+                    <li onclick="load('snd_stop')">stop</li>
+                    <li onclick="load('snd_destroy')">destroy</li>
+                    <li onclick="load('snd_sync')">sync</li>
+                    <li onclick="load('snd_stream')">stream</li>
+                    <li onclick="load('snd_set')">set</li>
+                    <li onclick="load('snd_playing')">playing</li>
+                    <li onclick="load('snd_file_stream')">file_stream</li>
+                    <li onclick="load('snd_is_threaded')">is_threaded</li>
+                    <li onclick="load('snd_set_volume')">set_volume</li>
+                    <li onclick="load('snd_volume')">volume</li>
+                    <li onclick="load('snd_set_pitch')">set_pitch</li>
+                    <li onclick="load('snd_pitch')">pitch</li>
+                    <li onclick="load('snd_set_master_volume')">set_master_volume</li>
+                    <li onclick="load('snd_master_volume')">master_volume</li>
+                    <li onclick="load('snd_get_position')">get_position</li>
+                    <li onclick="load('snd_get_duration')">get_duration</li>
+                    <li onclick="load('snd_seek')">seek</li>
+                    <li onclick="load('snd_get_spectrum')">get_spectrum</li>
+                    <li onclick="load('snd_fade')">fade</li>
+                </div>
+                <li onclick="toggleMenu('sub-ipt', 'input', this)"><span>▸</span> Namespace input</li>
+                <div id="sub-ipt" class="submenu">
+                    <li onclick="load('ipt_gotoxy')">gotoxy</li>
+                    <li onclick="load('ipt_set_console_layout')">set_console_layout</li>
+                    <li onclick="load('ipt_language')">language</li>
+                    <li onclick="load('ipt_mouse')">mouse</li>
+                    <li onclick="load('ipt_keyboard')">keyboard</li>
+                    <li onclick="load('ipt_mousewait')">mousewait</li>
+                    <li onclick="load('ipt_keywait')">keywait</li>
+                    <li onclick="load('ipt_mouse_show')">mouse_show</li>
+                    <li onclick="load('ipt_mouse_capture')">mouse_capture</li>
+                </div>
+                <li onclick="toggleMenu('sub-wnd', 'window', this)"><span>▸</span> Namespace window</li>
+                <div id="sub-wnd" class="submenu">
+                    <li onclick="load('wnd_enum_window_box')">Enum window_box</li>
+                    <li onclick="load('wnd_defMailMan')">Tmpl defMailMan</li>
+                    <li onclick="load('wnd_create')">create</li>
+                    <li onclick="load('wnd_wait')">wait</li>
+                    <li onclick="load('wnd_destroy')">destroy</li>
+                    <li onclick="load('wnd_sendmessage')">sendmessage</li>
+                    <li onclick="load('wnd_draw')">draw</li>
+                    <li onclick="load('wnd_pixels')">pixels</li>
+                    <li onclick="load('wnd_clear')">clear</li>
+                    <li onclick="load('wnd_resize')">resize</li>
+                    <li onclick="load('wnd_getsize')">getsize</li>
+                    <li onclick="load('wnd_retitle')">retitle</li>
+                    <li onclick="load('wnd_gettitle')">gettitle</li>
+                    <li onclick="load('wnd_father')">father</li>
+                    <li onclick="load('wnd_getscreen')">getscreen</li>
+                    <li onclick="load('wnd_show')">show</li>
+                    <li onclick="load('wnd_focus')">focus</li>
+                    <li onclick="load('wnd_focuswait')">focuswait</li>
+                    <li onclick="load('wnd_active')">active</li>
+                    <li onclick="load('wnd_is_extern')">is_extern</li>
+                </div>
+                <li onclick="load('todo_listo')">¿Todo Listo?</li>
+            </ul>
+        </div>
+    </div>
+    <div style="flex-grow:1; width: 5%; height:100%; background-color: var(--content-color);overflow-y: auto;scrollbar-color: #444 var(--sidebar-color);"><div id="_cont" style="margin: 40px;"></div></div>
+</div>
+<script>
+    const docu = document.getElementById("_cont");
+    const content = {
+        intro: `
+            <div style="line-height:1.6;">
+                <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">🧰 Bienvenido a System_Tools</h1>
+                <p style="font-size: 1.1em;">Una librería de bajo nivel diseñada para el control total del hardware sin dependencias ocultas ni <i>bloatware</i> de la Runtime estándar.</p>
+                <div class="tap">
+                    <strong style="color:var(--accent);">Filosofía:</strong> 
+                    Cargar solo lo necesario, ejecutar donde sea necesario. System_Tools no se "instala", se integra.
+                </div>
+                <h3 style="color:#fff; margin-top:30px;">¿Por qué System_Tools?</h3>
+                <p>En el desarrollo moderno, las librerías estándar (CRT/STL) suelen añadir megabytes de código muerto y dependencias de DLLs específicas (como <code>msvcrt.dll</code> o <code>vcruntime140.dll</code>). 
+                <strong>System_Tools</strong> rompe esta cadena mediante:</p>
+                <ul style="color: #bbb; padding-left: 20px;">
+                    <li><strong style="color:#fff;">Carga Dinámica Nativa:</strong> No linkeamos librerías en tiempo de compilación. Buscamos los símbolos directamente en las bibliotecas del núcleo (Kernel32, Libc, ALSA) usando <code>get_system_function</code> durante el tiempo de establecimiento de la memoria estatica.</li>
+                    <li><strong style="color:#fff;">Agnosticismo de Plataforma:</strong> El mismo código fuente maneja las sutiles diferencias entre los descriptores de archivos de Linux y los Handles de Windows de forma automatica, <strong>sin que el programador tenga que intervenir.</strong></li>
+                    <li><strong style="color:#fff;">Memoria Predictiva:</strong> Implementaciones de gestión de memoria que priorizan la alineación y la limpieza de datos autonoma por defecto.</li>
+                </ul>
+                <div class="note">
+                    <h4 style="margin-top:0; color: var(--accent);">Versión "BDay" (LTS)</h4>
+                    <p style="font-size: 0.9em; margin-bottom:0;">Esta versión conmemora el nacimiento y la publicación oficial de la libreria. Es la base no solo para futuras versiones, tambien es la base recomendada para proyectos que requieren alta interactividad con el usuario y el hardware utilizando la menor cantidad de espacio en KBs en el binario del ejecutable y en la RAM.</p>
+                </div>
+            </div>`,
+        permiciones: `
+            <div style="line-height:1.6;">
+                <h1 style="color:var(--perm-gold);">🧩 Matriz de Permiciones</h1>
+                <p>Las funciones marcadas con (P) requieren múltiples imports.</p>
+                <table style="width:100%; border-collapse: collapse; margin-top:20px;">
+                    <tr style="background:#333; text-align:left;">
+                        <th style="padding:10px;">Función</th>
+                        <th style="padding:10px;">Requisitos</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>file::apendo()</code> y <code>file::geto()</code></td>
+                        <td style="padding:10px;width:50%;">Algunas de sus funcionalidades internas requieren de otros IMPORTs para poder operar con ellos. Por ejemplo, requiere de SOUND para operar con el mismo.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::file_stream()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::reload()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::get_position()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::get_duration()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::seek()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::get_spectrum()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>sound::fade()</code></td>
+                        <td style="padding:10px;">SOUND + FILE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>input::mouse()</code></td>
+                        <td style="padding:10px;">INPUT + WINDOW, sin esta combinación, la detección solo se podrá realizar a nivel global.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>input::keyboard()</code></td>
+                        <td style="padding:10px;">INPUT + WINDOW, sin esta combinación, la detección solo se podrá realizar a nivel global.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>input::mousewait()</code></td>
+                        <td style="padding:10px;">INPUT + WINDOW, sin esta combinación, la detección solo se podrá realizar a nivel global.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>input::keywait()</code></td>
+                        <td style="padding:10px;">INPUT + WINDOW, sin esta combinación, la detección solo se podrá realizar a nivel global.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>input::mouse_show()</code></td>
+                        <td style="padding:10px;">INPUT + WINDOW, sin esta combinación, la visbilidad del mouse solo se podrá establecer a nivel global.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;"><code>input::mouse_capture()</code></td>
+                        <td style="padding:10px;">INPUT + WINDOW, sin esta combinación, el atrapado del mouse solo se podrá realizar a nivel global, lo que se traduce en una cancelación.</td>
+                    </tr>
+                </table>
+            </div>`,
+        setup: `
+            <div style="line-height:1.6;">
+                <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">⚙️ Configuración & CRT-Free</h1>
+                <p>Uno de los mayores logros de <strong>System_Tools</strong> es su capacidad para operar en un entorno 100% libre de la C-Runtime (CRT) estándar, eliminando la necesidad de incluir archivos como <code>stdio.h</code> o <code>stdlib.h</code>.</p>
+                <h3 style="color:#fff; margin-top:30px;">1. El Mecanismo de Equivalencias</h3>
+                <p>Si el compilador detecta que no se han incluido las cabeceras estándar, <code>System_Tools</code> activa automáticamente un sistema de macros que mapea las funciones clásicas a sus contrapartes de bajo nivel dentro de la librería:</p>
+                <div style="background:#1a1a1a; padding:15px; border-radius:5px; font-family:'Consolas', monospace; color:#d7ba7d; border: 1px solid #333;">
+                    <span style="color:#6a9955;">// Ejemplo de redirección automática</span><br>
+                    #define printf(str, ...)   System_Tools::printf(str, ##__VA_ARGS__)<br>
+                    #define alloc(size)        System_Tools::memory::alloc(size)<br>
+                    #define sleep(ms)          System_Tools::sleep(ms)
+                </div>
+                <h3 style="color:#fff; margin-top:30px;">2. Configuración del Compilador (Linker)</h3>
+                <p>Para obtener un binario verdaderamente minimalista (de apenas unos pocos KBs), se recomienda configurar el proyecto para ignorar las librerías predeterminadas:</p>
+                <ul style="color: #bbb;">
+                    <li><strong style="color:#fff;">En Visual Studio:</strong> Propiedades -> Vinculador -> Entrada -> <code style="color:var(--accent);">Omitir todas las bibliotecas predeterminadas: Sí</code>.</li>
+                    <li><strong style="color:#fff;">No mezclar:</strong> En caso de tener librerias estandar incluidas dentro del código de tu proyecto/archivo, es recomendable purgar los <code>#include</code> y las flags del Linker.</li>
+                </ul>
+                <div class="note" style="border-left-color: #e06c75; background: rgba(224, 108, 117, 0.1);">
+                    <h4 style="margin-top:0; color: #e06c75;">⚠️ Advertencia de Seguridad</h4>
+                    <p style="font-size: 0.9em;">Al trabajar en modo CRT-Free, no debes mezclar punteros de <code>System_Tools::memory::alloc</code> con el <code>free()</code> estándar de C, ni viceversa. Las estructuras internas de gestión de memoria son incompatibles y causarían una violación de acceso inmediata.</p>
+                </div>
+                <h3 style="color:#fff; margin-top:30px;">3. Ejemplo de un archivo "Limpio"</h3>
+                <pre style="background:#1a1a1a; padding:20px; border-radius:5px; overflow-x:auto; border: 1px solid #333; color: #9cdcfe;"><span style="color:#569cd6;">#define</span> ST_NO_DEFAULT<br><span style="color:#569cd6;">#include</span> <span style="color:#ce9178;">"System_Tools.h"</span><br><span style="color:#569cd6;">int</span> <span style="color:#dcdcaa;">main</span>(){<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#6a9955;">// No hay stdio.h, pero printf funciona a través de System_Tools</span><br>&nbsp;&nbsp;&nbsp;&nbsp;printf(<span style="color:#ce9178;">"Memoria asignada con éxito\\n"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">void</span>* p = alloc(<span style="color:#b5cea8;">1024</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;free(p);<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">return</span> <span style="color:#b5cea8;">0</span>;<br>}</div>
+            </div>`,
+        imports: `
+            <div style="line-height:1.6;">
+                <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">📦 Sistema de ST_IMPORT</h1>
+                <p>A diferencia de las librerías convencionales que cargan todo su arsenal al incluir un <code>.h</code>, <strong>System_Tools</strong> utiliza un sistema de "Pay-as-you-go" (paga solo por lo que usas) mediante macros de preprocesador.</p>
+                <h3 style="color:#fff; margin-top:30px;">1. Estructura de Importación</h3>
+                <p>Para activar un módulo, debe definirse su macro correspondiente <strong>antes</strong> de la inclusión de la cabecera principal. Si no se define ninguna macro, la librería entrará en modo <i>Lean</i> (mínimo consumo) o cargará la configuración por defecto según el entorno.</p>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:20px;">
+                    <div style="background:#1a1a1a; padding:15px; border-radius:5px; border:1px solid #333;">
+                        <strong style="color:var(--accent);">Macros Disponibles:</strong>
+                        <ul style="font-family:'Consolas', monospace; font-size:0.9em; color:#9cdcfe; list-style:none; padding:0; margin-top:10px;">
+                            <li>• ST_IMPORT_SOUND</li>
+                            <li>• ST_IMPORT_FILE</li>
+                            <li>• ST_IMPORT_WINDOW</li>
+                            <li>• ST_IMPORT_INPUT</li>
+                        </ul>
+                    </div>
+                    <div style="background:#1a1a1a; padding:15px; border-radius:5px; border:1px solid #333;">
+                        <strong style="color:#e06c75;">Control Global:</strong>
+                        <ul style="font-family:'Consolas', monospace; font-size:0.9em; color:#ce9178; list-style:none; padding:0; margin-top:10px;">
+                            <li>• ST_NO_DEFAULT</li>
+                            <li style="color:#888;">(Desactiva la carga automática de módulos base, esto evitará que se definan todas las macros a la vez. Se activa automaticamente cuando se define alguna de las macros de 'ST_IMPORT')</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 style="color:#fff; margin-top:30px;">2. ¿Por qué usar este sistema?</h3>
+                <p>El uso de estas macros afecta directamente a tres pilares del desarrollo:</p>
+                <table style="width:100%; border-collapse: collapse; margin-top:10px; color:#bbb;">
+                    <tr>
+                        <td style="padding:10px; border-bottom:1px solid #333;"><strong style="color:#fff;">Binario:</strong></td>
+                        <td style="padding:10px; border-bottom:1px solid #333;">El compilador descarta físicamente el código de los módulos no importados, reduciendo el tamaño del .exe/.out.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; border-bottom:1px solid #333;"><strong style="color:#fff;">Memoria:</strong></td>
+                        <td style="padding:10px; border-bottom:1px solid #333;">No se reservan espacios estáticos adicionales ni se cargan DLLs innecesarias (como winmm.dll si no usas SOUND).</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px; border-bottom:1px solid #333;"><strong style="color:#fff;">Conflictos:</strong></td>
+                        <td style="padding:10px; border-bottom:1px solid #333;">Evita colisiones de nombres con otras librerías al mantener los espacios de nombres cerrados.</td>
+                    </tr>
+                </table>
+                <h3 style="color:#fff; margin-top:30px;">3. Comportamiento en Cascada</h3>
+                <p>Es importante recordar que algunos módulos "desbloquean" funcionalidades en otros. Por ejemplo, definir <code>ST_IMPORT_SOUND</code> te da acceso al motor de audio, pero solo al añadir <code>ST_IMPORT_FILE</code> obtendrás la capacidad de hacer <i>streaming</i> desde el disco duro.</p>
+                <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin-top:30px;">
+                    <p style="margin:0;"><strong>💡 Tip de Optimización:</strong> Si estás desarrollando una herramienta de consola pura, evita importar <code>WINDOW</code> e <code>INPUT</code> para mantener el binario por debajo de los 20KB.</p>
+                </div>
+            </div>`,
+        defaults: `
+            <div style="line-height:1.6;">
+                <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">🛠️ Funciones por Defecto y Definiciones</h1>
+                <p>Existen componentes de <strong>System_Tools</strong> que forman el núcleo atómico de la librería. Estos elementos no requieren un <code>ST_IMPORT</code> específico, ya que son necesarios para el establecimiento de la memoria estática y la carga de símbolos del sistema.</p>
+                <h3 style="color:#fff; margin-top:30px;">1. Adaptaciones de la STL (Standard Template Library)</h3>
+                <p>Para garantizar la portabilidad absoluta sin incluir archivos de cabecera estándar, hemos recreado las funciones más utilizadas:</p>
+                <div style="background:#1a1a1a; padding:15px; border-radius:5px; border:1px solid #333; font-family:'Consolas', monospace; font-size:0.9em;">
+                    <ul style="list-style:none; padding:0; margin:0; color:#9cdcfe;">
+                        <li><span style="color:#569cd6;">printf</span>(format, ...) - Salida formateada a consola.</li>
+                        <li><span style="color:#569cd6;">scanf</span>(format, ...) - Entrada de datos formateada.</li>
+                        <li><span style="color:#569cd6;">system</span>(command) - Ejecución de comandos del sistema operativo.</li>
+                        <li><span style="color:#569cd6;">puts</span>(str) / <span style="color:#569cd6;">putchar</span>(chr) / <span style="color:#569cd6;">sprintf</span>(str, format, ...) - Manejo básico de caracteres.</li>
+                    </ul>
+                </div>
+                <h3 style="color:#fff; margin-top:30px;">2. Utilidades de Sistema</h3>
+                <ul style="color: #bbb; padding-left: 20px;">
+                    <li><strong style="color:#fff;">clear()</strong>: Limpia la terminal de forma inteligente. Detecta automáticamente si debe usar <code>CLS</code> (Windows) o <code>clear</code> (Linux).</li>
+                    <li><strong style="color:#fff;">message(msg, title, type)</strong>: Invoca una ventana de diálogo nativa (MessageBox en Win32 / Zenity o similar en Linux) para interacciones críticas tipo <i>One-Quest-One-Answer</i>.</li>
+                    <li><strong style="color:#fff;">get_system_function(name, dll/so)</strong>: El motor de carga dinámica. Permite obtener punteros a funciones directamente de archivos binarios del sistema en tiempo de ejecución desde la memoria RAM.</li>
+                </ul>
+                <h3 style="color:#fff; margin-top:30px;">3. Tipos de Datos y Macros de Arquitectura</h3>
+                <p>Para evitar ambigüedades entre 32 y 64 bits, definimos tipos de datos con tamaño garantizado:</p>
+                <table style="width:100%; border-collapse: collapse; margin-top:10px; background:#1a1a1a; color:#ce9178; font-family:'Consolas';">
+                    <tr style="border-bottom:1px solid #333;">
+                        <td style="padding:10px;">WORD / UWORD</td>
+                        <td style="padding:10px; color:#888;">Enteros con/sin signo ajustados al tamaño de palabra del sistema.</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #333;">
+                        <td style="padding:10px;">IS_LITTLE_ENDIAN</td>
+                        <td style="padding:10px; color:#888;">Macro booleana para detección de orden de bytes en tiempo de compilación.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;">IS_BIG_ENDIAN</td>
+                        <td style="padding:10px; color:#888;">Macro booleana para arquitecturas que procesan el byte más significativo primero.</td>
+                    </tr>
+                </table>
+                <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin-top:30px;">
+                    <h4 style="margin:0; color:var(--accent);">📌 Nota sobre persistencia:</h4>
+                    <p style="margin-bottom:0;">Los namespaces <strong>memory</strong> (gestión de heap) y <strong>thread</strong> (manejo de hilos nativos) vienen incluidos por defecto en este apartado. No requieren macros de importación, ya que son los pilares de estabilidad para cualquier binario creado con esta librería.</p>
+                </div>
+            </div>`,
+        tips: `
+            <div style="line-height:1.6;">
+                <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">&nbsp;💡 Consejos Comunes (Q&A)</h1>
+                <p>Respuestas rápidas y mejores prácticas para exprimir al máximo el potencial de <strong>System_Tools</strong>.</p>
+                <div class="qa-card" style="background:#1a1a1a; padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid #333;">
+                    <h3 style="color:var(--accent); margin-top:0;">¿Cómo manejo rutas de archivos en ambos sistemas?</h3>
+                    <p>Aunque Windows usa <code>\\</code> y Linux <code>/</code>, System_Tools está diseñado para normalizar las rutas internamente. Sin embargo, se recomienda usar siempre <code>/</code> por compatibilidad universal.</p>
+                    <div class="function-example">file::open("data/sounds/fx.wav", file_mode::read); <span style="color:#6a9955;">// Funciona en ambos</span></div>
+                    <p>En caso de que aun tengas la incertidumbre de si usar <code>\\</code> o <code>/</code>, System_Tools te ofrece una función para normalizar tus textos alocados en memoria (no constante) segun la plataforma en la que te encuentres.</p>
+                    <div class="function-example">char* my_path = <span style="color:#6a9955;">/* ... */</span>;<br>UWORD my_path_size;<br>file::normalize(my_path, &my_path_size);</div>
+                </div>
+                <div class="qa-card" style="background:#1a1a1a; padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid #333;">
+                    <h3 style="color:var(--accent); margin-top:0;">Mi programa crashea al usar free(), ¿qué sucede?</h3>
+                    <p>Verifica que no estés mezclando gestores de memoria. Si usas funciones de <code>namespace memory</code>, <strong>todas</strong> las liberaciones relacionadas deben pasar por nuestro <code>free()</code>.</p>
+                    <div style="color:#e06c75; font-size:0.9em; font-family:monospace;">
+                        ❌ char* p = (char*)alloc(10); delete[] p;<br>
+                        ❌ char* p = new char[10]; free(p);<br>
+                        ✅ char* p = new char[10]; delete[] p;<br>
+                        ✅ char* p = (char*)alloc(10); free(p);
+                    </div>
+                </div>
+                <div class="qa-card" style="background:#1a1a1a; padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid #333;">
+                    <h3 style="color:var(--accent); margin-top:0;">¿Cómo sé si mi sistema es Little o Big Endian?</h3>
+                    <p>No necesitas comprobarlo manualmente. Usa nuestras macros predefinidas para ramificar tu lógica de procesamiento de bits.</p>
+                    <div class="function-firm" style="background:#000;">#if IS_LITTLE_ENDIAN == 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#6a9955;">// Lógica para x86 / x64 / ARM modernos</span><br>#endif</div>
+                </div>
+                <div class="qa-card" style="background:#1a1a1a; padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid #333;">
+                    <h3 style="color:var(--accent); margin-top:0;">¿Cómo sé si mi sistema es x32 o x64?</h3>
+                    <p>No necesitas comprobarlo manualmente. Puedes usar <code>sizeof(WORD)</code> para comprobarlo por ti mismo.</p>
+                    <div class="function-firm" style="background:#000;">#if sizeof(WORD) == 4<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#6a9955;">// Lógica para x32</span><br>#else<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#6a9955;">// Lógica para x64</span><br>#endif</div>
+                    <p>Tambien puedes guardar dicho valor en una variable y/o utilizarlo dentro de un calculo que tu necesites.</p>
+                    <div class="function-example">int _sze = sizeof(WORD); <span style="color:#6a9955;">// Ahora tenemos almacenado el tamaño de una sola palabra</span><br><span style="color: #569cd6;">printf</span>("Estamos en una arquitectura de x%d bits\\n", _sze * 8);</div>
+                </div>
+                <div style="text-align:center; margin-top:40px; padding:20px; border:1px dashed #444;">
+                    <p style="color:#888;">¿Tienes una duda técnica específica? <br> Consulta la sección de <strong onClick="load('criteries')" style="cursor: pointer;">Criterios a tener en cuenta</strong>.</p>
+                </div>
+            </div>`,
+    memory: `
+        <div style="line-height:1.6;">
+            <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">🧠 Namespace memory</h1>
+            <p>El núcleo de gestión de recursos de <strong>System_Tools</strong>. Este namespace proporciona una abstracción de bajo nivel sobre el montículo (heap) del sistema, garantizando memoria limpia y operaciones de bloque seguras.</p>
+            <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin: 20px 0;"><strong>Nota de Diseño:</strong> A diferencia de <code>malloc</code>, las funciones de asignación de este namespace inicializan la memoria a cero por defecto para evitar punteros basura en estructuras críticas.</div>
+            <h3 style="color:#fff; margin-top:30px;">Funciones Principales</h3>
+            <ul style="color: #bbb;">
+                <li><strong>Asignación:</strong> <code>alloc</code>, <code>slloc</code></li>
+                <li><strong>Liberación:</strong> <code>free</code></li>
+                <li><strong>Manipulación de Bloques:</strong> <code>realloc</code>, <code>clloc</code> (copy), <code>mlloc</code> (move)</li>
+                <li><strong>Lógica de Comparación:</strong> <code>cnrlloc</code>, <code>cmplloc</code></li>
+            </ul>
+        </div>`,
+    mem_alloc: `
+        <h2 style="color:var(--accent);">memory::alloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: alloc(size)</span>
+        <p>Reserva un bloque de memoria en el heap del sistema.</p>
+        <div class="function-firm">void* alloc(unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>size</code> - Cantidad de bytes a reservar.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong> Puntero a la memoria asignada (inicializada a 0) o <code>nullptr</code> si falla.</p>
+        <p><strong>Ejemplo de uso:</strong></p>
+        <div class="function-example">int* mis_datos = (int*)alloc(10 * sizeof(int)); <span style="color:#6a9955;">// Asignar espacio para 10 enteros</span><br>if(mis_datos) printf("Primer valor: %d", mis_datos[0]); <span style="color:#6a9955;">// Imprimirá 0</span></div>`,
+    mem_clloc: `
+        <h2 style="color:var(--accent);">memory::clloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: clloc(d, s, size)</span>
+        <p>Copia un bloque de memoria de un origen a un destino (Equivalente a <code>memcpy</code>).</p>
+        <div class="function-firm">void* clloc(void* dest, const void* src, unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>dest</code> - Puntero al bloque de memoria destino.</li>
+            <li><code>src</code> - Puntero al bloque de memoria de origen.</li>
+            <li><code>size</code> - Cantidad de bytes a copiar desde el bloque de memoria de origen al destino.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong> Puntero al bloque de memoria destino o <code>nullptr</code> si falla.</p>
+        <p><strong>Seguridad:</strong><ul>
+            <li>Usar solo con aquellos bloques que no se sobrepongan (para eso use <code>mlloc</code>).</li>
+            <li>Usar solo con aquellos bloques ya creados</li>
+            <li>Usar solo con aquellos bloques del mismo tamaño</li>
+            <li>No usar con <code>nullptr</code>s</li>
+        <ul></p>`,
+    mem_slloc: `
+        <h2 style="color:var(--accent);">memory::slloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: slloc(d, v, size)</span>
+        <p>Establece el valor de todos los bytes de un bloque de memoria a uno asignado.</p>
+        <div class="function-firm">void* slloc(void* dest, unsigned char value, unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>dest</code> - Puntero al bloque de memoria destino.</li>
+            <li><code>value</code> - Valor al que se asignaran todos los bytes del bloque en memoria.</li>
+            <li><code>size</code> - Cantidad de bytes a establecer el valor dentro del bloque de memoria.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong> Puntero al bloque de memoria destino o <code>nullptr</code> si falla.</p>`,
+    mem_mlloc: `
+        <h2 style="color:var(--accent);">memory::mlloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: mlloc(d, s, size)</span>
+        <p>Copia un bloque de memoria de un origen a un destino (Equivalente a <code>memcpy</code>).</p>
+        <div class="function-firm">void* mlloc(void* dest, const void* src, unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>dest</code> - Puntero al bloque de memoria destino.</li>
+            <li><code>src</code> - Puntero al bloque de memoria de origen.</li>
+            <li><code>size</code> - Cantidad de bytes a copiar desde el bloque de memoria de origen al destino.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong> Puntero al bloque de memoria destino o <code>nullptr</code> si falla.</p>
+        <p><strong>Nota:</strong> Es recomendable utilizar esta función en caso de que tus bloques en memoria donde copiarás valores se superponen.</p>`,
+    mem_cnrlloc: `
+        <h2 style="color:var(--accent);">memory::cnrlloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: cnrlloc(p1, p2, size)</span>
+        <p>Sistema de comparación y validación entre bloques.</p>
+        <div class="function-firm">void* cnrlloc(const void* p1, const void* p2, unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>p1</code> - Puntero al primer bloque de memoria.</li>
+            <li><code>p2</code> - Puntero al segundo bloque de memoria.</li>
+            <li><code>size</code> - Cantidad de bytes promedio entre ambos bloques de memoria.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong><ul>
+            <li>Si son iguales: Devuelve el XOR de ambos punteros.</li>
+            <li>Si son distintos: Devuelve el puntero al bloque menor según el contenido.</li>
+            <li>Si ambos punteros apuntan a la misma dirección: Devuelve el primer puntero (Por equivalencia).</li>
+            <li>Si algo falla: Devuelve <code>nullptr</code>.</li>
+        </ul></p>
+        <p><strong>Ejemplo de lógica de validación:</strong></p>
+        <div class="function-example">void* check_ptr = cnrlloc(bloque_A, bloque_B, 64);<br>if(bloque_A == bloque_B) puts("Ambos bloques son el mismo");<br>else if(!check_ptr) puts("Hubo un error");<br>else if(check_ptr == bloque_A) puts("El 'bloque_A' es el más pequeño");<br>else if(check_ptr == bloque_B) puts("El 'bloque_B' es el más pequeño");<br>else puts("Los datos son idénticos.");</div>
+        <div class="note" style="background: rgba(215, 186, 125, 0.1); border-left: 4px solid var(--perm-gold); padding:10px;">
+            <strong>💡 Tip de Optimización:</strong> Ideal para checksums rápidos de buffers de audio o frames de video antes de procesar cambios.
+        </div>`,
+    mem_cmplloc: `
+        <h2 style="color:var(--accent);">memory::cmplloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: cmplloc(p1, p2, size)</span>
+        <p>Sistema de comparación booleana y validación entre bloques.</p>
+        <div class="function-firm">void* cmplloc(const void* p1, const void* p2, unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>p1</code> - Puntero al primer bloque de memoria.</li>
+            <li><code>p2</code> - Puntero al segundo bloque de memoria.</li>
+            <li><code>size</code> - Cantidad de bytes promedio entre ambos bloques de memoria.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong><ul>
+            <li>Si son iguales: Devuelve el XOR de ambos punteros.</li>
+            <li>Si son distintos: Devuelve <code>nullptr</code>.</li>
+            <li>Si algo falla: Devuelve <code>nullptr</code>.</li>
+        </ul></p>
+        <p><strong>Ejemplo de lógica de validación:</strong></p>
+        <div class="function-example">void* check_ptr = cmplloc(bloque_A, bloque_B, 64);<br>if(bloque_A == bloque_B) puts("Ambos bloques son el mismo");<br>else if(check_ptr) puts("Los datos son idénticos.");<br>else puts("Los datos son diferentes.");</div>`,
+    mem_realloc: `
+        <h2 style="color:var(--accent);">memory::realloc</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: realloc(ptr, size)</span>
+        <p>Permite mover un bloque en memoria a una nueva direción, dandole tambien la posibilidad de cambiar su tamaño limite de ser necesario.
+            Muy utilizado para, por ejemplo, cambiar el tamaño de un arreglo en memoria facilmente sin necesidad de duplicar el mismo arreglo</p>
+        <div class="function-firm">void* realloc(void* ptr, unsigned int size);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>ptr</code> - Puntero al bloque de memoria a mover.</li>
+            <li><code>size</code> - Cantidad de bytes nuevos para el bloque en memoria.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong> Puntero a la nueva direción a la que ahora pertenece el bloque de memoria o <code>nullptr</code> si falla.</p>
+        <p><strong>Ejemplo de uso (Expansión de Array):</strong></p>
+        <div class="function-example">void* buffer = alloc(512);<br><span style="color:#6a9955;">// De 512 bytes a 1024 bytes</span><br>void* temp = realloc(buffer, 1024);<br>if(temp) buffer = temp;<br>else <span style="color:#6a9955;">// Falló la expansión, pero el puntero original 'buffer' sigue siendo válido</span></div>`,
+    mem_free: `
+        <h2 style="color:var(--accent);">memory::free</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Macro: free(ptr)</span>
+        <p>Libera un bloque de memoria previamente asignado y establece el puntero a <code>nullptr</code>.</p>
+        <div class="function-firm">void* free(void* ptr);</div>
+        <p><strong>Parámetros:</strong><ul>
+            <li><code>ptr</code> - Puntero al bloque de memoria a desasignar.</li>
+        </ul></p>
+        <p><strong>Retorno:</strong> Puntero al bloque de memoria a desasignar o <code>nullptr</code> si falla.</p>
+        <div class="note" style="border-left: 4px solid #e06c75; background: rgba(224,108,117,0.1); padding:10px; margin:20px 0;">
+            <strong>Tip:</strong> <code>free</code> no necesariamente devuelve nullptr. Puedes usarlo dentro de un <code>printf</code> para indicar que bloque en memoria de una lista de punteros se acabó de eliminar.
+        </div>
+        <p><strong>Ejemplo de uso:</strong></p>
+        <div class="function-example">void* deletedPtr = (char*)free(ptr); <span style="color:#6a9955;">// Libera y avisa que puntero se eliminó</span></div>`,
+    thread: `
+        <div style="line-height:1.6;">
+            <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">🧵 Namespace thread</h1>
+            <p>Proporciona una interfaz unificada para la creación y gestión de hilos nativos, abstrayendo las APIs de <strong>pthreads</strong> en Linux y <strong>Win32 Threads</strong> en Windows.</p>
+            
+            <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin: 20px 0;">
+                <strong>Nota de Diseño:</strong> Todos los hilos creados a través de este namespace operan con una prioridad normal por defecto y se manejan mediante punteros opacos (void*) que representan el emboltorio con todos los elementos indispensables para la subsistencia de un unico hilo.
+            </div>
+        </div>`,
+    thr_create: `
+        <h2 style="color:var(--accent);">thread::create</h2>
+        <p>Lanza un nuevo hilo de ejecución ejecutando la función proporcionada.</p>
+        <div class="function-firm">void* create(void*(*func)(void*), void* arg = nullptr);<br>template&lt;typename R, typename... Args&gt; void* create(R(*func)(Args...), void* arg = nullptr);</div>
+        <p><strong>Parámetros:</strong></p>
+        <ul>
+            <li><code>func</code>: Puntero a la función que ejecutará el hilo.</li>
+            <li><code>arg</code>: Puntero a los datos que se pasarán a la función (opcional).</li>
+        </ul>
+        <p><strong>Ejemplo de uso:</strong></p>
+        <div class="function-example">void* mi_tarea(void* p){<br>printf("Hilo activo!");<br>&nbsp;&nbsp;&nbsp;&nbsp;return nullptr;<br>}<br>int tarea_2(){<br>&nbsp;&nbsp;&nbsp;&nbsp;return 1 + 2;<br>}<br>void* h1 = thread::create(mi_tarea);<br>void* h2 = thread::create(tarea_2);</div>`,
+    thr_join: `
+        <h2 style="color:var(--accent);">thread::join</h2>
+        <p>Bloquea el hilo actual hasta que el hilo especificado finalice su ejecución.</p>
+        <div class="function-firm">void* join(void* thr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>thr</code>: Puntero al hilo en ejecución.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al hilo o <code>nullptr</code> si la operación falla.</p>`,
+    thr_kill: `
+        <h2 style="color:#e06c75;">thread::kill</h2>
+        <p>Termina de forma forzosa la ejecución de un hilo.</p>
+        <div class="function-firm">void* kill(void* thr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>thr</code>: Puntero al hilo en ejecución.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al hilo o <code>nullptr</code> si la operación falla.</p>
+        <div class="note" style="border-left: 4px solid #e06c75; background: rgba(224,108,117,0.1); padding:10px;">
+            <strong>⚠️ Peligro:</strong> Esta función no libera recursos ni ejecuta destructores. Úsela solo en casos de emergencia, hilos bloqueados o si solo sabe lo que usted está haciendo.
+        </div>`,
+    thr_yiel: `
+        <h2 style="color:var(--accent);">thread::yiel</h2>
+        <p>Permite verificar si un puntero a un hilo es un handle valido o no. Si <code>_wait</code> es verdadero, genera una pausa temporal.</p>
+        <div class="function-firm">inline bool yiel(void* thr, bool _wait = true);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>thr</code>: Puntero al hilo.</li>
+            <li><code>_wait</code>: Generar una pausa temporal (Opcional).</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al hilo o <code>nullptr</code> si la operación falla o demuestra que el puntero al hilo es un handle invalido.</p>
+        <p><strong>Uso común:</strong> Evitar el consumo del 100% de CPU en bucles <code>while(true)</code>.</p>`,
+    file: `
+        <div style="line-height:1.6;">
+            <div style="padding-top:21px; padding-left: 1px; display: flex;justify-content: space-between;align-items: center;">
+                <h1 style="color:#fff; margin: 0px;">📁 Namespace file</h1>
+                <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+            </div>
+            <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;margin:0px;margin-top:1px;"></h1>
+            <p style="margin-top:21px;">Proporciona una interfaz unificada para la manipulación de archivos y directorios. Diseñado para trabajar con punteros opacos (<code>void*</code>), evitando la exposición de estructuras internas del SO.</p>
+            <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin: 20px 0;"><strong>Nota de Portabilidad:</strong> Las rutas son normalizadas internamente. Se recomienda el uso de <code>/</code> (slash) como separador universal.</div>
+            <div style="background: rgba(215, 186, 125, 0.05); border: 1px dashed #d7ba7d; padding: 15px; border-radius: 4px; margin-top: 10px;"><small style="color: #d7ba7d;">⚠️ <strong>Importante:</strong> Sin esta macro, las funciones de este namespace no serán enlazadas durante la compilación para mantener el binario liviano.</small></div>
+        </div>`,
+    file_enum_file_mode: `
+        <h2 style="color:var(--perm-gold);">Enum: file_mode</h2>
+        <p>Define los permisos de apertura. Pueden combinarse usando el operador binario OR (<code>|</code>).</p>
+        <table style="width:100%; border-collapse: collapse; background:#1a1a1a; color:#ce9178; font-family:'Consolas';">
+            <tr style="border-bottom:1px solid #333;color:#888;">
+                <td style="padding:10px;">Nombre</td>
+                <td style="padding:10px;">Valor (Hexadecimal)</td>
+                <td style="padding:10px;">Descripción</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">read</td>
+                <td style="padding:10px;">0x01</td>
+                <td style="padding:10px; color:#888;">Abre el archivo para lectura.</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">write</td>
+                <td style="padding:10px;">0x02</td>
+                <td style="padding:10px; color:#888;">Abre el archivo para escritura.</td>
+            </tr>
+            <tr>
+                <td style="padding:10px;">create</td>
+                <td style="padding:10px;">0x08</td>
+                <td style="padding:10px; color:#888;">Crea el archivo si no existe.</td>
+            </tr>
+        </table>`,
+    file_enum_seek_mode: `
+        <h2 style="color:var(--perm-gold);">Enum: seek_mode</h2>
+        <p>Define la forma en la que operará la función <code>file::seek</code>.</p>
+        <table style="width:100%; border-collapse: collapse; background:#1a1a1a; color:#ce9178; font-family:'Consolas';">
+            <tr style="border-bottom:1px solid #333;color:#888;">
+                <td style="padding:10px;">Nombre</td>
+                <td style="padding:10px;">Valor (Decimal)</td>
+                <td style="padding:10px;">Descripción</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">begin</td>
+                <td style="padding:10px;">0</td>
+                <td style="padding:10px; color:#888;">Movimiento a partir del inicio.</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">current</td>
+                <td style="padding:10px;">1</td>
+                <td style="padding:10px; color:#888;">Movimiento a partir de la posición actual del cursor de lectura/escritura.</td>
+            </tr>
+            <tr>
+                <td style="padding:10px;">end</td>
+                <td style="padding:10px;">2</td>
+                <td style="padding:10px; color:#888;">Movimiento en reversa a partir del final.</td>
+            </tr>
+        </table>`,
+    file_enum_time_mode: `
+        <h2 style="color:var(--perm-gold);">Enum: time_mode</h2>
+        <p>Define la forma en la que operará la función <code>file::timestamp</code>, cambiando la fecha a retornar dependiendo del mismo.</p>
+        <table style="width:100%; border-collapse: collapse; background:#1a1a1a; color:#ce9178; font-family:'Consolas';">
+            <tr style="border-bottom:1px solid #333;color:#888;">
+                <td style="padding:10px;">Nombre</td>
+                <td style="padding:10px;">Valor (Decimal)</td>
+                <td style="padding:10px;">Descripción</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">creation</td>
+                <td style="padding:10px;">0</td>
+                <td style="padding:10px; color:#888;">Lectura de la fecha desde su creación.</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">access</td>
+                <td style="padding:10px;">1</td>
+                <td style="padding:10px; color:#888;">Lectura de la fecha desde su ultima abertura/lectura.</td>
+            </tr>
+            <tr>
+                <td style="padding:10px;">writed</td>
+                <td style="padding:10px;">2</td>
+                <td style="padding:10px; color:#888;">Lectura de la fecha desde su ultima escritura.</td>
+            </tr>
+        </table>`,
+    file_exist: `
+        <h2 style="color:var(--accent);">file::exist</h2>
+        <p>Verifica la presencia de un archivo o carpeta en el sistema de archivos.</p>
+        <div class="function-firm">bool exist(const char* filepath);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>filepath</code>: Puntero al texto que representa la ruta del archivo/carpeta a comprobar existencia.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si la ruta es válida y accesible, <code>false</code> de ser lo contrario.</p>`,
+    file_open: `
+        <h2 style="color:var(--accent);">file::open</h2>
+        <p>Obtiene un puntero de acceso (Handle) al archivo especificado.</p>
+        <div class="function-firm">void* open(const char* path, UWORD mode = file_mode::read);<br>void* open(void* folder, const char* subPath);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>path</code>: Puntero al texto que representa la ruta del archivo a abrir.</li>
+            <li><code>mode</code>: Modo de abertura (Opcional, los modos <code>file_mode::read</code> y <code>file_mode::write</code> no se pueden combinar entre ellos).</li>
+            <li><code>folder</code>: Puntero al acceso de una carpeta abierta (El modo de abertura será heredado del mismo).</li>
+            <li><code>subPath</code>: Puntero al texto que representa la ruta relativa desde la susodicha carpeta.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al acceso del archivo ya abierto, <code>nullptr</code> si falla o si el archivo no existe.</p>
+        <p><strong>Ejemplo de uso:</strong></p>
+        <div class="function-example"><br>void* mi_archivo = file::open("config.ini", file_mode::read | file_mode::write);<br>if(!mi_archivo){<br>&nbsp;&nbsp;&nbsp;&nbsp;puts("Archivo inexistente o se produjo un error durante la apertura del mismo.");<br>&nbsp;&nbsp;&nbsp;&nbsp;return -1;<br>}</div>
+        <p><strong>¿Cuando la función falla?</strong></p><ul>
+            <li>Cuando se produjo algun tipo de error del sistema al intentar realizar la apertura.</li>
+            <li>Cuando el archivo que se deseaba abrir en realidad era una carpeta.</li>
+            <li>Cuando el archivo no existe y no se utilizó el modo <code>file_mode::create</code>.</li>
+            <li>Cuando el binario de tu ejecutable no posee los permisos adecuados para lectura/escritura de ficheros.</li>
+            <li>Cuando el archivo a abrir existe pero posee permisos unicamente para la acción opuesta a realizar (Vease permisos de solo escritura cuando usas el modo <code>file_mode::read</code> y diseversa).</li>
+        </ul>`,
+    file_copy: `
+        <h2 style="color:var(--accent);">file::copy</h2>
+        <p>Operación para duplicar un archivo/carpeta de su ruta original a la destino.</p>
+        <div class="function-firm">const char* copy(const char* src, const char* dst, bool overwrite = true);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>src</code>: Puntero al texto que representa la ruta del archivo/carpeta que se desea duplicar.</li>
+            <li><code>dst</code>: Puntero al texto que representa la ruta destino para el archivo/carpeta ya duplicado.</li>
+            <li><code>overwrite</code>: Permiso para sobreescribir cuando encuentra coincidencias entre ficheros (Opcional).</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al texto de la ruta destino, <code>nullptr</code> si falla o si no tuvo exito.</p>`,
+    file_move: `
+        <h2 style="color:var(--accent);">file::move</h2>
+        <p>Operación para mover y/o renombrar un archivo/carpeta de su ruta original a la destino.</p>
+        <div class="function-firm">const char* move(const char* old_path, const char* new_path, bool overwrite = true);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>old_path</code>: Puntero al texto que representa la ruta origen del archivo/carpeta que se desea mover/renombrar.</li>
+            <li><code>new_path</code>: Puntero al texto que representa la ruta destino del archivo/carpeta ya movido/renombrado.</li>
+            <li><code>overwrite</code>: Permiso para sobreescribir cuando encuentra coincidencias entre ficheros (Opcional).</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al texto de la ruta destino, <code>nullptr</code> si falla o si no tuvo exito.</p>
+        <div class="note" style="background: rgba(0, 122, 204, 0.1); border-left: 4px solid var(--accent); padding:10px;">
+            <strong>Aclaración:</strong> Esta función opera directamente con los metadatos del archivo, por lo que no habrá duplicados durante el viaje del archivo/carpeta y su contenido, sin que usted se tenga que preocupar de la integridad de los datos.
+            Solo se realizarán duplicados temporales cuando el archivo/carpeta se tenga que mover entre discos duros distintos.
+        </div>`,
+    file_close: `
+        <h2 style="color:var(--accent);">file::close</h2>
+        <p>Cierra el acceso al archivo y libera el puntero del sistema operativo.</p>
+        <div class="function-firm">void* close(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso del archivo/carpeta a cerrar.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al acceso del archivo ya abierto, <code>nullptr</code> si falla o si el archivo no existe.</p>`,
+    file_opened_like: `
+        <h2 style="color:var(--accent);">file::opened_like</h2>
+        <p>Dado un acceso de archivo/carpeta cualquiera, permite obtener de vuelta el modo de apertura con el que se opera el mismo.</p>
+        <div class="function-firm">UWORD opened_like(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso que se desea consultar, sea archivo o carpeta.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Palabra completa donde se almacenan los modos, <code>file_mode::none</code> si no es un acceso valido o el acceso no posee permisos.</p>`,
+    file_parent: `
+        <h2 style="color:var(--accent);">file::parent</h2>
+        <p>Dado un acceso de archivo/carpeta cualquiera, permite obtener un nuevo acceso a carpeta, donde se encuentra abierta la carpeta padre del archivo/carpeta superior.</p>
+        <div class="function-firm">void* parent(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso que se desea consultar, sea archivo o carpeta.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero a un nuevo acceso de carpeta, <code>nullptr</code> si falla o intentas consultar la carpeta padre de la ruta directa al disco duro.</p>`,
+    file_remove: `
+        <h2 style="color:var(--accent);">file::remove</h2>
+        <p>Realiza una operación de cierre del acceso y elimina del disco duro el archivo/carpeta al que solía apuntar.</p>
+        <div class="function-firm">const char* remove(const char* filepath);<br>void* remove(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>filepath</code>: Puntero al texto que representa la ruta al archivo/carpeta a eliminar.</li>
+            <li><code>file</code>: Puntero al acceso del archivo/carpeta a cerrar y eliminar.</li>
+        </ul>
+        <p><strong>Retorno:</strong></p><ul>
+            <li>Puntero al texto de la ruta del archivo/carpeta ya eliminado, <code>nullptr</code> si falla o la ruta no existe.</li>
+            <li>Puntero al acceso del archivo/carpeta ya cerrado y eliminado, <code>nullptr</code> si falla o si el acceso era invalido.</li>
+        </ul>`,
+    file_read: `
+        <h2 style="color:var(--accent);">file::read</h2>
+        <p>Lee una cantidad específica de bytes desde el archivo hacia un buffer de memoria.</p>
+        <div class="function-firm">UWORD read(void* file, void* buffer, UWORD bytes);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso del archivo a leer contenido.</li>
+            <li><code>buffer</code>: Puntero al bloque en memoria cualquiera donde se desea guardar el contenido leído.</li>
+            <li><code>bytes</code>: Cantidad de bytes que se desean leer.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Cantidad real de bytes leídos. Si es menor que <code>bytes</code>, se ha alcanzado el final del archivo (EOF).</p>
+        <div class="note" style="background: rgba(224, 108, 117, 0.1); border-left: 4px solid #e06c75; padding:10px;">
+            <strong>Importante:</strong> Requiere que el archivo haya sido abierto con <code>file_mode::read</code>.
+        </div>`,
+    file_write: `
+        <h2 style="color:var(--accent);">file::write</h2>
+        <p>Escribe el contenido de un buffer en el archivo.</p>
+        <div class="function-firm">UWORD write(void* file, const void* buffer, UWORD bytes);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso del archivo a escribir contenido.</li>
+            <li><code>buffer</code>: Puntero al bloque en memoria cualquiera donde se desea consultar el contenido a escribir.</li>
+            <li><code>bytes</code>: Cantidad de bytes que se desean escribir.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Cantidad real de bytes escritos. Si los bytes a escribir superan el final del archivo, se realizará un procedimiendo de adición automatica.</p>
+        <div class="note" style="background: rgba(224, 108, 117, 0.1); border-left: 4px solid #e06c75; padding:10px;">
+            <strong>Importante:</strong> Requiere que el archivo haya sido abierto con <code>file_mode::write</code>.
+        </div>`,
+    file_seek: `
+        <h2 style="color:var(--accent);">file::seek</h2>
+        <p>Control de la posición del cursor interno del archivo.</p>
+        <div class="function-firm">UWORD seek(void* file, WORD lenght, UWORD mode);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso del archivo por donde nos moveremos.</li>
+            <li><code>lenght</code>: Cantidad de bytes por los cuales nos desplazaremos, inclutendo el signo.</li>
+            <li><code>mode</code>: Modo de recorrido por el cual la función operará.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Cantidad real de bytes en la que nos encontramos desde el inicio (posición actual).</p>
+        <p><strong>Ejemplo (Saltar los primeros 10 bytes):</strong></p>
+        <div class="function-example">file::seek(mi_archivo, 10, seek_mode::begin);<br>UWORD posicion = file::tell(mi_archivo); <span style="color:#6a9955;">// devolverá 10</span></div>`,
+    file_tell: `
+        <h2 style="color:var(--accent);">file::tell</h2>
+        <p>Obtiene la posición del cursor interno del archivo.</p>
+        <div class="function-firm">UWORD tell(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso del archivo a consultar.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Cantidad real de bytes en la que nos encontramos desde el inicio.</p>`,
+    file_size: `
+        <h2 style="color:var(--accent);">file::size</h2>
+        <p>Obtiene la cantidad de bytes totales que compone un unico archivo. Si es una carpeta, obtendrá la cantidad de elementos internos.</p>
+        <div class="function-firm">UWORD size(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso del archivo a consultar.</li>
+        </ul>
+        <p><strong>Retorno:</strong></p><ul>
+            <li><strong>Si es un archivo:</strong> Devolverá la cantidad real de bytes que lo componen.</li>
+            <li><strong>Si es una carpeta:</strong> Devolverá la cantidad de subelementos internos de la misma.</li>
+            <li>Devolverá <code>0</code> si el acceso era invalido o no tenía contenido de por sí.</li>
+        </ul>`,
+    file_clear: `
+        <h2 style="color:var(--accent);">file::clear</h2>
+        <p>Vacía el contenido de un archivo sin eliminar el archivo del sistema (truncado). De aplicarse a una carpeta, borrará <strong>TODOS</strong> sus subelementos (Incluyendo contenido de subcarpetas y esas mismas subcarpetas).</p>
+        <div class="function-firm">UWORD clear(const char* filepath);<br>UWORD clear(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>filepath</code>: Puntero al texto que representa la ruta del archivo/carpeta a vaciar.</li>
+            <li><code>file</code>: Puntero al acceso del archivo/carpeta a vaciar.</li>
+        </ul>
+        <p><strong>Retorno:</strong></p><ul>
+            <li><strong>Si es un archivo:</strong> Devolverá la cantidad de bytes borrados si se vacío correctamente.</li>
+            <li><strong>Si es una carpeta:</strong> Devolverá la cantidad de subelementos borrados si se vació correctamente.</li>
+            <li>Devolverá <code>0</code> si el acceso era invalido o no tenía contenido de por sí.</li>
+        </ul>`,
+    file_folder: `
+    
+        <h2 style="color:var(--accent);">file::folder</h2>
+        <p>Abre un directorio del sistema como un bloque de acceso (Handle).</p>
+        <div class="function-firm">void* folder(const char* filepath, UWORD openMode = file_mode::read);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>filepath</code>: Puntero al texto que representa la ruta de la carpeta a abrir.</li>
+            <li><code>openMode</code>: Modo de abertura (Opcional, los modos <code>file_mode::read</code> y <code>file_mode::write</code> no se pueden combinar entre ellos).</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al acceso de la carpeta ya abierta, <code>nullptr</code> si falla o si la carpeta no existe.</p>
+        <p><strong>Uso comun:</strong> Permite obtener un puntero a una carpeta para luego iterar sobre su contenido con <code>file::inside</code>.</p>`,
+    file_inside: `
+        <h2 style="color:var(--accent);">file::inside</h2>
+        <p>Accede al elemento (archivo o subcarpeta) contenido en un directorio mediante un índice.</p>
+        <div class="function-firm">void* inside(void* folder, UWORD idx);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>folder</code>: Puntero al acceso de la carpeta ya abierto (El modo de apertura se hereda del mismo).</li>
+            <li><code>idx</code>: Posición de abertura entre cada uno de los subelementos de la carpeta.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Puntero al acceso del elemento en la posición <code>idx</code> ya abierto. <code>nullptr</code> si el índice está fuera de rango, falla la apertura o el acceso es de un archivo o invalido.</p>
+        <div class="note" style="background: rgba(0, 122, 204, 0.1); border-left: 4px solid var(--accent); padding:10px;"><strong>Tip:</strong> Si no sabes realmente de cuantos subelementos mide la carpeta para establecer el valor del parametro <code>idx</code>, siempre puedes utilizar la función <code>file_mode::size</code> para comprobarlo.</div>`,
+    file_is_folder: `
+        <h2 style="color:var(--accent);">file::is_folder</h2>
+        <p>Determina si un puntero de un acceso corresponde a un directorio o a un archivo.</p>
+        <div class="function-firm">bool is_folder(void* file);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso a comprobar.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si es una carpeta. <code>false</code> si es de un archivo.</p>`,
+    file_name: `
+        <h2 style="color:var(--accent);">file::name</h2>
+        <p>Extrae el nombre del archivo desde un handle abierto.</p>
+        <div class="function-firm">void* name(void* file, char** fname, UWORD* fnsize, bool with_extension = false);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso a comprobar.</li>
+            <li><code>fname</code>: Puntero a la variable a modificar, donde se almacenará el puntero al texto resultado (Requiere liberación posterior).</li>
+            <li><code>fnsize</code>: Puntero a la variable a modificar, donde se almacenará el tamaño resultante al texto resultado.</li>
+            <li><code>with_extension</code>: Indicador para verificar si el texto resultado debe contener el <code>'.'</code> y el texto correspondiente, o no (Opcional).</li>
+        </ul>
+        <p><strong>Retorno:</strong> El puntero al acceso a comprobar si se logra con exito. <code>nullptr</code> si falla, el acceso es invalido o si el parametro <code>fname</code> es <code>nullptr</code>.</p>`,
+    file_extension: `
+        <h2 style="color:var(--accent);">file::extension</h2>
+        <p>Obtiene la extensión del archivo (ej: "wav", "txt").</p>
+        <div class="function-firm">void* extension(void* file, char** fname, UWORD* fnsize, bool with_dot = false);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso a comprobar.</li>
+            <li><code>fname</code>: Puntero a la variable a modificar, donde se almacenará el puntero al texto resultado (Requiere liberación posterior).</li>
+            <li><code>fnsize</code>: Puntero a la variable a modificar, donde se almacenará el tamaño resultante al texto resultado.</li>
+            <li><code>with_dot</code>: Indicador para verificar si el texto resultado debe contener el <code>'.'</code>, o no (Opcional).</li>
+        </ul>
+        <p><strong>Retorno:</strong> El puntero al acceso a comprobar si se logra con exito. <code>nullptr</code> si falla, el acceso es invalido o si el parametro <code>fname</code> es <code>nullptr</code>.</p>`,
+    file_path: `
+        <h2 style="color:var(--accent);">file::path</h2>
+        <p>Devuelve la ruta completa (absoluta) al archivo o carpeta referenciada dentro del acceso.</p>
+        <div class="function-firm">void* path(void* file, char** fname, UWORD* fnsize);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso a comprobar.</li>
+            <li><code>fname</code>: Puntero a la variable a modificar, donde se almacenará el puntero al texto resultado (Requiere liberación posterior).</li>
+            <li><code>fnsize</code>: Puntero a la variable a modificar, donde se almacenará el tamaño resultante al texto resultado.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El puntero al acceso a comprobar si se logra con exito. <code>nullptr</code> si falla, el acceso es invalido o si el parametro <code>fname</code> es <code>nullptr</code>.</p>`,
+    file_root_this: `
+        <h2 style="color:var(--accent);">file::root_this</h2>
+        <p>Obtiene la ruta absoluta del directorio donde se encuentra el ejecutable actual.</p>
+        <div class="function-firm">void root_this(char** fname, UWORD* fnsize);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>fname</code>: Puntero a la variable a modificar, donde se almacenará el puntero al texto resultado (Requiere liberación posterior).</li>
+            <li><code>fnsize</code>: Puntero a la variable a modificar, donde se almacenará el tamaño resultante al texto resultado.</li>
+        </ul>
+        <p><strong>Uso comun:</strong> Esencial para cargar recursos relativos al binario sin depender del "Working Directory" del SO.</p>`,
+    file_normalize: `
+        <h2 style="color:var(--accent);">file::normalize</h2>
+        <p>Corrige una cadena de ruta para que use los separadores adecuados y elimine redundancias (como <code>./</code> o <code>//</code>).</p>
+        <div class="function-firm">char* normalize(char* path, UWORD* path_size = nullptr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>path</code>: Puntero al bloque de memoria donde se almacena el texto a modificar por el texto resultante.</li>
+            <li><code>path_size</code>: Puntero a la variable a modificar, donde se almacenará el tamaño resultante al texto resultante.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El puntero al texto resultante si se logra con exito. <code>nullptr</code> si falla.</p>
+        <div class="note" style="border-left: 4px solid var(--accent); background: rgba(0, 122, 204, 0.1); padding:10px;"><strong>Tip:</strong> Esta función modifica la cadena original (in-place) para máxima eficiencia.</div>`,
+    file_apends: `
+        <h2 style="color:var(--accent);">file::apends</h2>
+        <p>Escribe una cadena de texto ASCII dentro de un archivo.</p>
+        <div class="function-firm">UWORD apends(void* file, const char* str);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea escribir (Requiere que tenga el modo <code>file_mode::write</code>).</li>
+            <li><code>str</code>: Puntero al bloque de memoria donde se almacena el texto a escribir.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El tamaño del texto si se logra con exito, <code>0</code> si falla o si el acceso al archivo es invalido.</p>
+        <p><strong>Uso comun:</strong> Ideal para logs o archivos de texto plano.</p>
+        <div class="note" style="border-left: 4px solid var(--accent); background: rgba(0, 122, 204, 0.1); padding:10px;"><strong>Tip:</strong> No es necesario calcular el tamaño de la cadena, la función lo hace internamente.</div>`,
+    file_apendws: `
+        <h2 style="color:var(--accent);">file::apendws</h2>
+        <p>Escribe una cadena de texto ancho dentro de un archivo.</p>
+        <div class="function-firm">UWORD apendws(void* file, const wchar_t* wstr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea escribir (Requiere que tenga el modo <code>file_mode::write</code>).</li>
+            <li><code>wstr</code>: Puntero al bloque de memoria donde se almacena el texto ancho a escribir.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El tamaño del texto ancho (En bytes) si se logra con exito, <code>0</code> si falla o si el acceso al archivo es invalido.</p>
+        <div class="note" style="border-left: 4px solid var(--accent); background: rgba(0, 122, 204, 0.1); padding:10px;"><strong>Tip:</strong> No es necesario calcular el tamaño de la cadena, la función lo hace internamente.</div>`,
+    file_apendc: `
+        <h2 style="color:var(--accent);">file::apendc</h2>
+        <p>Escribe un único carácter (sea ASCII o ancho) en el archivo.</p>
+        <div class="function-firm">UWORD apendc(void* file, int chr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea escribir (Requiere que tenga el modo <code>file_mode::write</code>).</li>
+            <li><code>chr</code>: Valor del carácter a escribir.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El tamaño del carácter escrito (En bytes) si se escribió correctamente, <code>0</code> si falla o el acceso al archivo es invalido.</p>`,
+    file_apendo: `
+        <h2 style="color:var(--accent);">file::apendo</h2>
+        <p>Serialización rápida de objetos. Escribe la estructura completa de un objeto en disco.</p>
+        <div class="function-firm">UWORD apendo(void* file, void* Hobj);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea escribir (Requiere que tenga el modo <code>file_mode::write</code>).</li>
+            <li><code>Hobj</code>: Puntero al objeto a escribir.</li>
+        </ul>
+        <p><strong>Retorno:</strong> La cantidad de bytes escrita si se escribió correctamente, <code>0</code> si falla o el acceso al archivo es invalido.</p>
+        <div class="note" style="background: rgba(215, 186, 125, 0.1); border-left: 4px solid var(--perm-gold); padding:10px;"><strong>Nota:</strong> <code>Hobj</code> debe ser un puntero a un acceso (Handle) de <strong>System_Tools</strong> valido.</div>`,
+    file_gets: `
+        <h2 style="color:var(--accent);">file::gets</h2>
+        <p>Extrae una cadena de texto ASCII del archivo hasta encontrar un terminador o el final del archivo.</p>
+        <div class="function-firm">UWORD gets(void* file, char** str);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea leer (Requiere que tenga el modo <code>file_mode::read</code>).</li>
+            <li><code>str</code>: Puntero a la variable a modificar, donde se almacenará el puntero al texto ASCII resultado (Requiere liberación posterior).</li>
+        </ul>
+        <p><strong>Retorno:</strong> La cantidad de bytes leidas si se a leído correctamente, <code>0</code> si falla o el acceso al archivo es invalido.</p>`,
+    file_getws: `
+        <h2 style="color:var(--accent);">file::getws</h2>
+        <p>Extrae una cadena de texto ancho del archivo hasta encontrar un terminador o el final del archivo.</p>
+        <div class="function-firm">UWORD getws(void* file, wchar_t** wstr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea leer (Requiere que tenga el modo <code>file_mode::read</code>).</li>
+            <li><code>wstr</code>: Puntero a la variable a modificar, donde se almacenará el puntero al texto ancho resultado (Requiere liberación posterior).</li>
+        </ul>
+        <p><strong>Retorno:</strong> La cantidad de bytes leidas si se a leído correctamente, <code>0</code> si falla o el acceso al archivo es invalido.</p>`,
+    file_getc: `
+        <h2 style="color:var(--accent);">file::getc</h2>
+        <p>Lee el siguiente carácter disponible (sea ASCII o ancho) en el archivo.</p>
+        <div class="function-firm">UWORD getc(void* file, int* chr);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea leer (Requiere que tenga el modo <code>file_mode::read</code>).</li>
+            <li><code>chr</code>: Puntero a la variable a modificar, donde se almacenará el valor del carácter leído.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El tamaño del carácter leído (En bytes) si se a leído correctamente, <code>0</code> si falla o el acceso al archivo es invalido.</p>`,
+    file_geto: `
+        <h2 style="color:var(--accent);">file::geto</h2>
+        <p>Deserialización de objetos. Lee un bloque de datos y lo vuelca directamente en la dirección del objeto proporcionada.</p>
+        <div class="function-firm">UWORD geto(void* file, void** Hobj);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>file</code>: Puntero al acceso al archivo donde se desea leer (Requiere que tenga el modo <code>file_mode::read</code>).</li>
+            <li><code>Hobj</code>: Puntero a la variable a modificar, donde se almacenará el puntero al acceso (Handle) resultante ya creado (Requiere liberación posterior).</li>
+        </ul>
+        <p><strong>Retorno:</strong> El tamaño en bytes completo de la estructura en su forma desglozada si se a leído correctamente, <code>0</code> si falla o el acceso al archivo es invalido.</p>
+        <p><strong>Ejemplo:</strong></p><div class="function-example">void* obj = nullptr;<br>file::geto(mi_archivo, &obj); <span style="color:#6a9955;">// Carga el objeto directamente.<br>// Para este ejemplo, supondremos que es un acceso a un archivo en modo lectura.</span><br>char* str;<br>file::gets(obj, &str);<br>file::close(obj);<br>puts(str);<br>delete[] str;</div>`,
+    file_to_date: `
+        <h2 style="color:var(--accent);">file::to_date</h2>
+        <p>Descompone un Timestamp (TS) crudo obtenido del sistema en componentes de tiempo legibles.</p>
+        <div class="function-firm">void to_date(UWORD ts, char* sec, char* min, char* hour, char* day, char* month, int* year);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>ts</code>: El Timestamp a convertir.</li>
+            <li><code>sec</code>: Puntero a la variable a modificar, donde se almacenará el valor de los segundos.</li>
+            <li><code>min</code>: Puntero a la variable a modificar, donde se almacenará el valor de los minutos.</li>
+            <li><code>hour</code>: Puntero a la variable a modificar, donde se almacenará el valor de las horas.</li>
+            <li><code>day</code>: Puntero a la variable a modificar, donde se almacenará el valor de los dias.</li>
+            <li><code>month</code>: Puntero a la variable a modificar, donde se almacenará el valor de los meses.</li>
+            <li><code>year</code>: Puntero a la variable a modificar, donde se almacenará el valor de los años.</li>
+        </ul>
+        <p><strong>Uso comun:</strong> Ideal para mostrar la fecha de modificación de un archivo en una interfaz de usuario.</p>
+        <div class="note" style="background: rgba(0, 122, 204, 0.1); border-left: 4px solid var(--accent); padding:10px;"><strong>Tip:</strong> Pasa punteros a variables de tipo <code>char</code> para ahorrar memoria, ya que los valores de minutos o días nunca superarán el rango de un byte.</div>`,
+    file_to_time: `
+        <h2 style="color:var(--accent);">file::to_time</h2>
+        <p>Realiza la operación inversa a <code>file::to_date</code>: empaqueta una fecha manual en un Timestamp (TS) compatible con el sistema.</p>
+        <div class="function-firm">void to_time(UWORD* ts, char sec, char min, char hour, char day, char month, int year);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>ts</code>: Puntero a la variable a modificar,  donde se almacenará el valor del Timestamp resultante.</li>
+            <li><code>sec</code>: Valor de los segundos.</li>
+            <li><code>min</code>: Valor de los minutos.</li>
+            <li><code>hour</code>: Valor de las horas.</li>
+            <li><code>day</code>: Valor de los dias.</li>
+            <li><code>month</code>: Valor de los meses.</li>
+            <li><code>year</code>: Valor de los años.</li>
+        </ul>
+        <p><strong>Uso comun:</strong> Útil para filtrar archivos creados "antes de" o "después de" una fecha específica introducida por el usuario.</p>`,
+    file_days_until_2000: `
+        <h2 style="color:var(--accent);">file::days_until_2000</h2>
+        <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:0.8em;">Core Clock Helper</span>
+        <p>Calcula el número de días transcurridos desde el inicio de la época actual hasta el año 2000.</p>
+        <div class="function-firm">UWORD days_until_2000();</div>
+        <p><strong>Retorno:</strong> El Timestamp (TS) resultante.</p>
+        <h3 style="color:#fff; margin-top:20px;">¿Para qué sirve esto?</h3>
+        <p>Muchos sistemas de archivos antiguos o embebidos utilizan el año 2000 como punto de referencia (Epoch). Esta función es el <strong>ajuste de desfase (offset)</strong> necesario para normalizar fechas entre Windows (que cuenta desde 1601) y sistemas basados en Unix (que cuentan desde 1970).</p>
+        <div class="note" style="background: rgba(0, 122, 204, 0.1); border-left: 4px solid var(--accent); padding:10px;"><strong>Tip:</strong> Puedes utilizarlo como una especie de "Deltatime casero".</div>
+        <div style="text-align:center; margin-top:20px; border: 1px dashed #444; padding:10px; color:#888;"><small>Es el "secreto" matemático que permite que System_Tools sea agnóstico respecto al tiempo del sistema.</small></div>`,
+    sound: `
+    <div style="line-height:1.6;">
+        <div style="padding-top:21px; padding-left: 1px; display: flex;justify-content: space-between;align-items: center;">
+            <h1 style="color:#fff; margin: 0px;">🔊 Namespace sound</h1>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_SOUND</span>
+        </div>
+        <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;margin:0px;margin-top:1px;"></h1>
+        <p style="margin-top:20px;">Control de salida de audio de baja latencia. Este namespace gestiona la comunicación directa con los drivers de sonido del sistema (ALSA/PulseAudio en Linux, DirectSound/WASAPI en Windows) de forma automatica, realizando mezclado automatico de pistas y configuración autonoma de buffers.</p>
+        <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin: 20px 0;"><strong>Nota Técnica:</strong> Opera por defecto a 44100Hz, 16-bit estéreo, optimizado para evitar el <i>stuttering</i> mediante buffers circulares internos.</div>
+    </div>`,
+    snd_create: `
+        <h2 style="color:var(--accent);">sound::create</h2>
+        <p>Inicializa una instancia de reproducción de sonido con un tamaño de buffer específico.</p>
+        <div class="function-firm">void* create(unsigned int buffer_size);<br>void* create(unsigned int buffer_size, float* mst_vol);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>buffer_size</code>: Tamaño en bytes del buffer circular (se recomienda potencias de 2, ej: 4096).</li>
+            <li><code>mst_vol</code>: Puntero a un flotante (0.0 a 1.0) para control de volumen maestro en tiempo real.</li>
+        </ul>
+        <p><strong>Retorno:</strong> El Puntero al acceso (Handle) a la estructura interna de reproducción de sonido asociada, ya abierta y lista para operar, <code>nullptr</code> si falla.</p>`,
+    snd_reload: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::reload</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Permite el rebobinado de un acceso de audio dado.</p>
+        <div class="function-firm">bool reload(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso de audio en paralelo a rebobinar.</li></ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla o el acceso es invalido.</p>
+        <div class="note" style="border-left: 4px solid var(--perm-gold); background: rgba(215, 186, 125, 0.1); padding: 15px; margin-top: 20px;"><strong>Lógica de Dependencia:</strong> Esta función requiere el módulo <code>file</code> porque realiza una operación de <code>seek</code> sobre el flujo de datos original para volver al byte 0 del stream de audio.</div>`,
+    snd_play: `
+        <h2 style="color:var(--accent);">sound::play</h2>
+        <p>Permite la reproducción de un acceso de audio dado.</p>
+        <div class="function-firm">bool play(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso de audio a reproducir.</li></ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla o el acceso es invalido.</p>
+        <p><strong>Comportamiento:</strong> <code>sound::play</code> inicia el consumo del buffer por parte del hardware. Si el buffer está vacío, se escuchará silencio hasta que uses <code>sound::stream</code> o lo frenes con <code>sound::stop</code> o <code>sound::destroy</code>.</p>`,
+    snd_stop: `
+        <h2 style="color:var(--accent);">sound::stop</h2>
+        <p>Permite la detención de un acceso de audio dado.</p>
+        <div class="function-firm">void stop(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso de audio a detener.</li></ul>
+        <p><strong>Comportamiento:</strong> <code>sound::stop</code> detiene el consumo del buffer por parte del hardware, más no destruye el acceso.</p>`,
+    snd_destroy: `
+        <h2 style="color:var(--accent);">sound::destroy</h2>
+        <p>Permite la destrucción y liberación de recursos autonoma de un acceso de audio dado.</p>
+        <div class="function-firm">void destroy(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso de audio a destruir.</li></ul>
+        <p><strong>Comportamiento:</strong> <code>sound::destroy</code> detiene el consumo del buffer por parte del hardware, y destruye el acceso junto a la suma de sus partes.</p>`,
+    snd_sync: `
+        <h2 style="color:var(--accent);">sound::sync</h2>
+        <p>Permite la sincronización entre un acceso de audio dado y el hilo ejecutor.</p>
+        <div class="function-firm">bool sync(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso de audio a comprobar.</li></ul>
+        <p><strong>Retorno:</strong> <code>true</code> si el audio está disponible para rellenar datos en su buffer. <code>false</code> si falla, el acceso es invalido o simplemente el buffer aun está ocupado reproduciendose.</p>`,
+    snd_stream: `
+        <h2 style="color:var(--accent);">sound::stream</h2>
+        <p>Alimenta el buffer de sonido de un acceso de audio con nuevos datos PCM crudos.</p>
+        <div class="function-firm">UWORD stream(void* snd, void* external_data, UWORD size);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso de audio al donde escribir.</li>
+            <li><code>external_data</code>: Puntero al bloque en memoria con los datos que se desean escribir.</li>
+            <li><code>size</code>: Cantidad de bytes de los datos que se desean escribir.</li>
+        </ul>
+        <p><strong>Retorno:</strong> Cantidad de bytes que se pudieron escribir dentro del buffer. <code>0</code> si falla, el acceso es invalido o simplemente el buffer aun está ocupado reproduciendose.</p>
+        <div class="note" style="background: rgba(0, 122, 204, 0.1); border-left: 4px solid var(--accent); padding:10px;"><strong>Recomendación:</strong> Acompaña su uso con <code>sound::sync</code> para saber cuando escribir los datos.</div>`,
+    snd_set: `
+        <h2 style="color:var(--accent);">sound::set</h2>
+        <p>Configura los parámetros técnicos de la salida de audio para un acceso de audio específico.</p>
+        <div class="function-firm">void set(void* snd, unsigned int rate, unsigned char channels, unsigned char bits);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso de audio a modificar.</li>
+            <li><code>rate</code>: Frecuencia de muestreo (ej: 44100, 48000).</li>
+            <li><code>channels</code>: 1 para Mono, 2 para Estéreo.</li>
+            <li><code>bits</code>: Profundidad de bits (habitualmente 8 o 16).</li>
+        </ul>`,
+    snd_file_stream: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::file_stream</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Crea un flujo de audio automático a partir de un archivo (Soporte nativo para <strong>.WAV</strong>).</p>
+        <div class="function-firm">void* file_stream(const char* path, bool looping, float pitch);<br>void* file_stream(void* file, bool looping, float pitch, bool canIcloser = false);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>path</code>: Puntero al texto representa la ruta al archivo donde consultar los datos PCM (Requiere que el archivo sea de formato WAV).</li>
+            <li><code>looping</code>: Configura el procesamiento del audio para saber si realizar una repetición un bucle o no.</li>
+            <li><code>pitch</code>: Velocidad de reproducción del audio (Se recomienda <code>1.0f</code> para una reproducción "Normal").</li>
+            <li><code>canIcloser</code>: Autoriza al hilo a cerrar el acceso al archivo (Y por ende destruirlo) cuando finalize la vida util del audio (Opcional).</li>
+        </ul>
+        <p><strong>Nota:</strong> Si <code>canIcloser</code> es true, la librería cerrará el acceso al archivo automáticamente al destruir el sonido.</p>`,
+    snd_set_volume: `
+        <h2 style="color:var(--accent);">sound::set_volume</h2>
+        <p>Modifica la amplitud de la señal de audio (su volumen).</p>
+        <div class="function-firm">bool set_volume(void* snd, float vol);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a modificar.</li>
+            <li><code>vol</code>: Cantidad de amplitud a aplicar en un numero de punto flotante.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si el puntero al acceso al audio es uno valido, <code>false</code> de ser lo contrario.</p>`,
+    snd_volume: `
+        <h2 style="color:var(--accent);">sound::volume</h2>
+        <p>Obtiene la amplitud de la señal de audio (su volumen).</p>
+        <div class="function-firm">bool volume(void* snd, float* vol);<br>float volume(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a consultar.</li>
+            <li><code>vol</code>: Puntero a la variable a modificar, donde se almacenará la cantidad de amplitud aplicada en el audio en un numero de punto flotante.</li>
+        </ul>
+        <p><strong>Retorno:</strong></p><ul>
+            <li><code>true</code> si el puntero al acceso al audio es uno valido, <code>false</code> de ser lo contrario.</li>
+            <li>La cantidad de amplitud aplicada en el audio en un numero de punto flotante</li>
+        </ul>`,
+    snd_set_pitch: `
+        <h2 style="color:var(--accent);">sound::set_pitch</h2>
+        <p>Modifica la velocidad de reproducción y el tono del sonido.</p>
+        <div class="function-firm">void set_pitch(void* snd, float pit);</div>
+            <p><strong>Parámetros:</strong></p><ul>
+                <li><code>snd</code>: Puntero al acceso al audio a modificar.</li>
+                <li><code>pit</code>: Cantidad de velocidad de reproducción a aplicar en un numero de punto flotante.</li>
+            </ul>
+            <p><strong>Efecto:</strong> Un valor de <code>1.0f</code> es la velocidad normal. <code>2.0f</code> dobla la velocidad (sube una octava), <code>0.5f</code> la reduce a la mitad (reduce una octava).</p>
+        </div>`,
+    snd_pitch: `
+        <h2 style="color:var(--accent);">sound::pitch</h2>
+        <p>Obtiene la amplitud de la señal de audio (su volumen).</p>
+        <div class="function-firm">bool pitch(void* snd, float* pit);<br>float pitch(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a consultar.</li>
+            <li><code>pit</code>: Puntero a la variable a modificar, donde se almacenará la cantidad de velocidad de reproducción aplicada en el audio en un numero de punto flotante.</li>
+        </ul>
+        <p><strong>Retorno:</strong></p><ul>
+            <li><code>true</code> si el puntero al acceso al audio es uno valido, <code>false</code> de ser lo contrario.</li>
+            <li>La cantidad de velocidad de reproducción aplicada en el audio en un numero de punto flotante</li>
+        </ul>`,
+    snd_set_master_volume: `
+        <h2 style="color:var(--accent);">sound::set_master_volume</h2>
+        <p>Vincula un puntero de volumen maestro a un acceso de audio.</p>
+        <div class="function-firm">bool set_master_volume(void* snd, float* mst_vol);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a modificar.</li>
+            <li><code>mst_vol</code>: Puntero a vincular como volumen maestro del audio.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si el puntero al acceso al audio es uno valido, <code>false</code> de ser lo contrario.</p>
+        <p><strong>La razon de usar un puntero dinámicamente:</strong> Al pasar un <code>float*</code>, cualquier cambio en la variable original afectará instantáneamente a todos los accesos de audios vinculados sin necesidad de llamar a <code>set_volume</code> uno por uno.</p>`,
+    snd_master_volume: `
+        <h2 style="color:var(--accent);">sound::master_volume</h2>
+        <p>Consulta el puntero vinculado de volumen maestro a un acceso de audio.</p>
+        <div class="function-firm">bool master_volume(void* snd, float** mst_vol);<br>float* master_volume(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a consultar.</li>
+            <li><code>mst_vol</code>: Puntero a la variable a modificar, donde se almacenará el puntero vinculado de volumen maestro del audio.</li>
+        </ul>
+        <p><strong>Retorno:</strong></p><ul>
+            <li><code>true</code> si el puntero al acceso al audio es uno valido, <code>false</code> de ser lo contrario.</li>
+            <li>El puntero vinculado de volumen maestro del audio.</li>
+        </ul>`,
+    snd_playing: `
+        <h2 style="color:var(--accent);">sound::playing</h2>
+        <p>Consulta si el acceso al audio está actualmente emitiendo sonido.</p>
+        <div class="function-firm">bool playing(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso al audio a consultar.</li></ul>
+        <p><strong>Retorno:</strong> <code>true</code> si el acceso al audio está actualmente emitiendo sonido, <code>false</code> de ser lo contrario o de ser un acceso invalido.</p>`,
+    snd_is_threaded: `
+        <h2 style="color:var(--accent);">sound::is_threaded</h2>
+        <p>Indica si el procesamiento del acceso de audio dado se está ejecutando en un hilo independiente, o no.</p>
+        <div class="function-firm">bool is_threaded(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso al audio a consultar.</li></ul>
+        <p><strong>Retorno:</strong> <code>true</code> si el acceso al audio se está ejecutando en un hilo independiente, <code>false</code> de ser lo contrario o de ser un acceso invalido.</p>`,
+    snd_get_position: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::get_position</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Obtiene la cantidad de segundos transcurridos del audio.</p>
+        <div class="function-firm">float get_position(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso al audio a consultar.</li></ul>
+        <p><strong>Retorno:</strong> La cantidad de segundos actuales que se han reproducido del audio hasta ahora, almacenadas en un numero de punto flotante.</p>
+        <p><strong>Uso comun:</strong> Ideal para, en conjunto con <code>sound::get_duration</code>, crear barras de progreso en reproductores multimedia.</p>`,
+    snd_get_duration: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::get_duration</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Obtiene la duración en segundos totales del audio.</p>
+        <div class="function-firm">float get_duration(void* snd);</div>
+        <p><strong>Parámetros:</strong></p><ul><li><code>snd</code>: Puntero al acceso al audio a consultar.</li></ul>
+        <p><strong>Retorno:</strong> La cantidad de segundos totales que dura el audio, almacenadas en un numero de punto flotante.</p>
+        <p><strong>Uso:</strong> Ideal para barras de progreso en reproductores multimedia.</p>`,
+    snd_seek: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::seek</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Salta a un punto específico del audio, basado en segundos.</p>
+        <div class="function-firm">bool seek(void* snd, float seconds);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a modificar.</li>
+            <li><code>seconds</code>: Numero en punto flotante que representará la cantidad de segundos a los que ir dentro del audio desde su inicio (Se recomienda valores iguales o mayores a <code>0.0f</code>).</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla o el acceso es invalido.</p>`,
+    snd_get_spectrum: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::get_spectrum</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Extrae los datos de frecuencia del buffer de audio actual para visualización.</p>
+        <div class="function-firm">bool get_spectrum(void* snd, float** buffer, UWORD* samples, float* average);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a consultar.</li>
+            <li><code>buffer</code>: Puntero a la variable a modificar, donde se almacenará el puntero al nuevo bloque en memoria que representará el array de magnitudes de frecuencia (Se limpia y genera automaticamente).</li>
+            <li><code>samples</code>: Puntero a la variable a modificar, donde se almacenará la cantidad de muestras procesadas.</li>
+            <li><code>average</code>: Puntero a la variable a modificar, donde se almacenará el valor promedio más alto de la amplitud (útil para detectar "beats" o golpes de ritmo).</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla o el acceso es invalido.</p>`,
+    snd_fade: `
+        <div style="display:flex;justify-content: space-between;align-items: center;">
+            <h2 style="color:var(--accent); margin-bottom: 4px;">sound::fade</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_FILE</span>
+        </div>
+        <p>Aplica una transición gradual de volumen en un tiempo determinado.</p>
+        <div class="function-firm">bool fade(void* snd, float target_volume, UWORD ms);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>snd</code>: Puntero al acceso al audio a modificar.</li>
+            <li><code>target_volume</code>: Numero en punto flotante que representará la cantidad de la amplitud objetivo para el audio.</li>
+            <li><code>ms</code>: Cantidad de milisegundos que durará la transición.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla o el acceso es invalido.</p>`,
+    input: `
+        <div style="line-height:1.6;">
+            <div style="padding-top:21px; padding-left: 1px; display: flex;justify-content: space-between;align-items: center;">
+                <h1 style="color:#fff; margin: 0px;">⌨️ Namespace input</h1>
+                <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_INPUT</span>
+            </div>
+            <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;margin:0px;margin-top:1px;"></h1>
+            <p style="margin-top:20px;">Gestión de periféricos y eventos de entrada. Este namespace abstrae las interrupciones del teclado y ratón, permitiendo una lectura de estados limpia y con bloqueos opcionales ("optional-blocking"); ademas de, ls inclusión, de funciones extra para la obtención de inputs extra y la modificación de la consola.</p>
+            <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin: 20px 0;"><strong>Nota de Rendimiento:</strong> Diseñado para alta frecuencia de muestreo (polling), ideal para bucles de juego o interfaces que requieren una respuesta de milisegundos.</div>
+            <div style="background: rgba(215, 186, 125, 0.05); border: 1px dashed #d7ba7d; padding: 15px; border-radius: 4px; margin-top: 10px;"><small style="color: #d7ba7d;">💡 <strong>Dato:</strong> Soporta mapeo directo de códigos virtuales de teclas (VK_CODES) para máxima compatibilidad entre sistemas.</small></div>
+        </div>`,
+    ipt_gotoxy: `
+        <h2 style="color:var(--accent);">input::gotoxy</h2>
+        <p>Posiciona el cursor de la consola en las coordenadas especificadas.</p>
+        <div class="function-firm">bool gotoxy(UWORD _x, UWORD _y);</div>
+        <p><strong>Parámetros:</strong><p><ul>
+            <li><code>_x</code>: Eje horizontal.</li>
+            <li><code>_y</code>: Eje vertical.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla inesperadamente.</p>
+        <p><strong>Uso comun:</strong> Esencial para crear interfaces tipo TUI (Text User Interface) y dibujar menús en posiciones fijas.</p>`,
+    ipt_set_console_layout: `
+        <h2 style="color:var(--accent);">input::set_console_layout</h2>
+        <p>Configura el modo de salida de la consola.</p>
+        <div class="function-firm">bool set_console_layout(bool UTF);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li>Si <code>UTF</code> es <code>true</code>: habilita el soporte para caracteres especiales y emojis (UTF-8), permitiendo una estética moderna en la terminal.</li>
+            <li>Si <code>UTF</code> es <code>false</code>: inhabilita el soporte para caracteres especiales y emojis (UTF-8), devolviendo a la terminal a su estado de soporte exclusivo para carácteres ASCII una vez más.</li>
+        </ul>
+        <p><strong>Retorno:</strong> <code>true</code> si lo logra, <code>false</code> si falla inesperadamente.</p>`,
+    ipt_language: `
+        <h2 style="color:var(--accent);">input::language</h2>
+        <p>Obtiene el identificador de idioma actual del teclado del sistema.</p>
+        <div class="function-firm">UWORD language();</div>
+        <p><strong>Retorno:</strong> Número identificador unico, que engloba el idioma y la región.</p>
+        <p><strong>Uso comun:</strong> Útil para ajustar el mapeo de teclas automáticamente según la región del usuario (ej: teclado hispanohablante vs inglés).</p>`,
+    ipt_mouse: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">input::mouse</h2>
+            <span style="background:var(--accent); color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px var(--accent);">Semi-REQ: #define ST_IMPORT_WINDOW</span>
+        </div>
+        <p>Obtiene el estado detallado del ratón, incluyendo coordenadas y estado de los botones principales.</p>
+        <div class="function-firm">void mouse(void* wnd, int* _x, int* _y, int* lclick, int* rclick);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Puntero del acceso a ventana a comprobar (Opcional, explicado mejor en los subsiguientes apartados de este articulo).</li>
+            <li><code>_x</code>: Puntero a la variable a modificar, donde se almacenará el numero entero representativo del eje horizontal del mouse, relativo a su foco a consultar.</li>
+            <li><code>_y</code>: Puntero a la variable a modificar, donde se almacenará el numero entero representativo del eje vertical del mouse, relativo a su foco a consultar.</li>
+            <li><code>lclick</code>: Puntero a la variable a modificar, donde se almacenará el numero entero representativo del tipo de click izquierdo del mouse.</li>
+            <li><code>rclick</code>: Puntero a la variable a modificar, donde se almacenará el numero entero representativo del tipo de click derecho del mouse.</li>
+        </ul>
+        <h3 style="color:#fff; margin-top:20px;">Comportamiento Dual:</h3><ul style="color:#bbb;">
+            <li><strong>Modo Global (<code>wnd</code> = <code>nullptr</code>):</strong> Retorna coordenadas basadas en la resolución total del monitor (0,0 es la esquina superior izquierda de la pantalla).</li>
+            <li><strong>Modo Ventana (<code>wnd</code> = handle):</strong> Retorna coordenadas relativas al área de cliente de la ventana. (Requiere <code>ST_IMPORT_WINDOW</code>).</li>
+        </ul>
+        <h3 style="color:#fff; margin-top:20px;">Ejemplo de Implementación:</h3><div class="function-example">void* wnd_handle = window::create(nullptr, "Test", 640, 480);<br>int x, y, left;<br><span style="color:#6a9955;">// Rastreo local del mouse</span><br>input::mouse(wnd_handle, &x, &y, &left, nullptr);<br><br>if(left) printf("Click en: %d, %d", x, y);</div>
+        <div style="margin-top:30px; padding:20px; background:rgba(255,255,255,0.05); border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold); margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display:flex; justify-content:space-around; align-items:center; color:#888; font-size:0.9em;">
+                <div style="text-align:center;">
+                    <div style="width:100px; height:60px; border:2px solid #666; margin-bottom:10px; position:relative;">
+                        <div style="position:absolute;top:5px;left:10px;width:60px; height:40px; border:2px solid var(--accent); margin-bottom:10px; position:relative; background:rgba(0,122,204,0.1);">
+                            <div style="position:absolute;top:-2px;left:-2px;width:60px; height:5px; border:2px solid var(--accent); margin-bottom:10px; position:relative; background:rgba(0,122,204,0.1);font-family:'Consolas';font-size: 5px;display: flex;align-items: center;justify-content: space-between;"><p>Test</p><p>◛ ◻ ✖</p></div>
+                            <div style="position:absolute; top:5px; left:10px; color:var(--accent);">✖</div>
+                        </div>
+                    </div>
+                    <span>Global (Desktop)</span>
+                </div>
+                <div style="font-size:2em;">➔</div>
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                    <div style="width:60px; height:40px; border:2px solid var(--accent); margin-bottom:10px; position:relative; background:rgba(0,122,204,0.1);">
+                        <div style="position:absolute;top:-2px;left:-2px;width:60px; height:5px; border:2px solid var(--accent); margin-bottom:10px; position:relative; background:rgba(0,122,204,0.1);font-family:'Consolas';font-size: 5px;display: flex;align-items: center;justify-content: space-between;"><p>Test</p><p>◛ ◻ ✖</p></div>
+                        <div style="position:absolute; top:5px; left:10px; color:#fff;">✖</div>
+                    </div>
+                    <span>Local (Window)</span>
+                </div>
+            </div>
+            <p style="font-size:0.85em; margin-top:15px; font-style:italic;">En el modo local, el origen (0,0) se desplaza al borde de la ventana activa, ignorando el resto del escritorio. Solo detectando los clicks unicamente cuando la ventana tiene el foco.</p>
+        </div>
+        <p><strong>¿Pero que pasa si no le pasamos un acceso a ventana?</strong></p><div class="function-example">int x, y, left;<br><span style="color:#6a9955;">// Rastreo global del mouse</span><br>input::mouse(nullptr, &x, &y, &left, nullptr);<br><br>if(left) printf("Click en: %d, %d", x, y);</div>
+        <div style="margin-top:30px; padding:20px; background:rgba(255,255,255,0.05); border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold); margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display:flex; justify-content:space-around; align-items:center; color:#888; font-size:0.9em;">
+                <div style="text-align:center;">
+                    <div style="width:100px; height:60px; border:2px solid #666; margin-bottom:10px; position:relative;">
+                        <div style="position:absolute;top:5px;left:10px;width:60px; height:40px; border:2px solid var(--accent); margin-bottom:10px; position:relative; background:rgba(0,122,204,0.1);">
+                            <div style="position:absolute;top:-2px;left:-2px;width:60px; height:5px; border:2px solid var(--accent); margin-bottom:10px; position:relative; background:rgba(0,122,204,0.1);font-family:'Consolas';font-size: 5px;display: flex;align-items: center;justify-content: space-between;"><p>MS Paint</p><p>◛ ◻ ✖</p></div>
+                        </div>
+                        <div style="position:absolute; top:32px; left:81px; color:var(--accent);">✖</div>
+                    </div>
+                    <span>Global (Desktop)</span>
+                </div>
+                <div style="font-size:2em;">➔</div>
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+                    <div style="width:100px; height:60px; border:2px solid #666; margin-bottom:10px; position:relative;">
+                        <div style="position:absolute;top:5px;left:10px;width:60px; height:40px; border:1px solid #666; margin-bottom:10px; position:relative;"></div>
+                        <div style="position:absolute; top:32px; left:81px; color:#fff;">✖</div>
+                    </div>
+                    <span>Global (Desktop yet...)</span>
+                </div>
+            </div>
+            <p style="font-size:0.85em; margin-top:15px; font-style:italic;">En el modo global, el origen (0,0) se localiza al borde de la pantalla/escritorio, ignorando el resto de ventanas. Este modo es ideal para juegos que ocupen toda la pantalla, ya que no requiere de esperar si alguna ventana tiene el foco.</p>
+        </div>`,
+    ipt_keyboard: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">input::keyboard</h2>
+            <span style="background:var(--accent); color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px var(--accent);">Semi-REQ: #define ST_IMPORT_WINDOW</span>
+        </div>
+        <p>Monitorea el estado de una tecla específica y gestiona el flujo de repetición del buffer de entrada.</p>
+        <div class="function-firm">void keyboard(void* wnd, char* key, char* ascii_key, int* outstanding_amount);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Puntero al acceso a ventana a consultar (Opcional, explicado mejor en los subsiguientes apartados de este articulo).</li>
+            <li><code>key</code>: Puntero de la variable a modificar, donde se almacenará la tecla más baja de la jerarquia (Obligatoría por si piensas consumir toda la lista).</li>
+            <li><code>ascii_key</code>: Puntero de la variable a modificar, donde se almacenará el carácter más bajo de la jerarquia.</li>
+            <li><code>outstanding_amount</code>: Puntero de la variable a modificar, donde se almacenará la cantidad teclas se estan presionando a la vez representadas por un numero entero con signo.</li>
+        </ul>
+        <h3 style="color:#fff; margin-top:20px;">Comportamiento Dual:</h3><ul style="color:#bbb;">
+            <li><strong>Modo Global (<code>wnd</code> = <code>nullptr</code>):</strong> Retorna detección de teclas, sin importar el programa/ventana foco.</li>
+            <li><strong>Modo Ventana (<code>wnd</code> = handle):</strong> Retorna detección de teclas, dependiendo si el acceso a ventana proporcionado posee el foco del cliente (Requiere <code>ST_IMPORT_WINDOW</code>).</li>
+        </ul>
+        <h3 style="color:#fff; margin-top:20px;">Ejemplo de Implementación:</h3>
+        <div class="function-example">int main(){<br>&nbsp;&nbsp;&nbsp;&nbsp;while(true){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char k = '\\0', as = '\\0';<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int total;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear(); puts("Preciona cualquier tecla, sal utilizando Enter");<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input::keyboard(nullptr, &k, &as, &total);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(as == '\\r') return 0; <span style="color:#6a9955;">// Finalizar al presionar Enter</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(as != '\\0') printf("Tecla detectada: %c (Quedan %d)\\n", as, total);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}while(as != '\\0');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sleep(10);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>}</div>
+        <div style="margin-top: 30px;background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold);margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display:flex;justify-content:space-evenly;align-items:center;padding:10px;flex-wrap: wrap;gap:10px;">
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;border:1px solid rgba(64, 64, 64, 0.5);padding:3px;">
+                    <div style="font-size: 16px;border:2px solid #555;width: 60px;height: 95px;display: flex;flex-direction: column;align-items: center;">
+                    <div style="width:100%;height:50%;"></div>
+                    <div style="width:100%;height:50%;text-align:center;">⌨</div></div>
+                    <small style="font-size:10px;">Presión nula<br>&nbsp;</small>
+                    <h4 style="text-align:left;"><code>outstanding_amount</code>: 0<br><code>key</code>: <code>'\\0'</code><br><code>ascii_key</code>: <code>'\\0'</code></h4>
+                </div>
+                <div style="font-size:24px;">➔</div>
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;border:1px solid rgba(64, 64, 64, 0.5);padding:3px;">
+                    <div style="font-size: 16px;border:2px solid #555;width: 60px;height: 95px;display: flex;flex-direction: column;align-items: center;">
+                    <div style="width:100%;height:50%;display:flex;flex-direction:row;align-items:center;justify-content:center;">
+                    <div style="width:20px;height:20px;border:2px solid var(--accent);box-shadow:0 0 5px var(--accent);padding-bottom:1px;display:flex;align-items:center;justify-content:center;">A</div>
+                    </div><div style="width:100%;height:50%;text-align:center;">⌨⬅A</div></div>
+                    <small style="font-size:10px;">Presión prolongada a la tecla <code>'A'</code><br>&nbsp;</small>
+                    <h4 style="text-align:left;"><code>outstanding_amount</code>: 1<br><code>key</code>: <code>'a'</code><br><code>ascii_key</code>: <code>'a'</code></h4>
+                </div>
+                <div style="font-size:24px;">➔</div>
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;border:1px solid rgba(64, 64, 64, 0.5);padding:3px;">
+                    <div style="font-size: 16px;border:2px solid #555;width: 60px;height: 95px;display: flex;flex-direction: column;align-items: center;">
+                    <div style="width:100%;height:50%;display:flex;flex-direction:row;align-items:center;justify-content: space-around;">
+                    <div style="width:20px;height:20px;border:2px solid var(--accent);box-shadow:0 0 5px var(--accent);padding-bottom:1px;display:flex;align-items:center;justify-content:center;">A</div>
+                    <div style="width:20px;height:20px;border: 2px solid #555;/* box-shadow:0 0 5px var(--accent); */padding-bottom:1px;display:flex;align-items:center;justify-content:center;">S</div></div><div style="width:100%;height:50%;text-align: right;padding-right: 16px;">⌨⬅A<br>⬅S</div></div>
+                    <small style="font-size:10px;">Presión prolongada a la tecla <code>'A'</code><br>Presión prolongada a la tecla <code>'S'</code></small>
+                    <h4 style="text-align:left;"><code>outstanding_amount</code>: 2<br><code>key</code>: <code>'a'</code><br><code>ascii_key</code>: <code>'a'</code></h4>
+                </div>
+                <div style="font-size:24px;">➔</div>
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;border:1px solid rgba(64, 64, 64, 0.5);padding:3px;">
+                    <div style="font-size: 16px;border:2px solid #555;width: 60px;height: 95px;display: flex;flex-direction: column;align-items: center;">
+                    <div style="width:100%;height:50%;display:flex;flex-direction:row;align-items:center;justify-content: space-around;">
+                    <div style="width:20px;height:20px;border:2px solid var(--accent);box-shadow:0 0 5px var(--accent);padding-bottom:1px;display:flex;align-items:center;justify-content:center;">S</div>
+                    </div><div style="width:100%;height:50%;text-align:center;">⌨⬅S</div></div>
+                    <small style="font-size:10px;text-align:right;">Se soltó la tecla <code>'A'</code><br>Presión prolongada a la tecla <code>'S'</code></small>
+                    <h4 style="text-align:left;"><code>outstanding_amount</code>: 1<br><code>key</code>: <code>'s'</code><br><code>ascii_key</code>: <code>'s'</code></h4>
+                </div></div>
+            <p style="font-size:0.85em; margin-top:10px; color:#888;">Esto permite saber no solo cuantas teclas se estan presionando a la vez, sino tambien cuales se presionan al mismo tiempo.</p>
+        </div>`,
+    ipt_mousewait: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">input::mousewait</h2>
+            <span style="background:var(--accent); color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px var(--accent);">Semi-REQ: #define ST_IMPORT_WINDOW</span>
+        </div>
+        <p>Bloquea el hilo actual hasta que el ratón realice la acción especificada.</p>
+        <div class="function-firm">void mousewait(void* wnd, bool buttonDirection, bool unPress = false);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Puntero al acceso a ventana a consultar (Opcional, explicado mejor en los subsiguientes apartados de este articulo).</li>
+            <li><code>buttonDirection</code>: Define el botón. <code>false</code> para Click Izquierdo, <code>true</code> para Click Derecho.</li>
+            <li><code>unPress</code>: <code>true</code> si quieres que la función espere a que el botón sea <strong>soltado</strong>, <code>false</code> si quieres que espere la presión (Opcional).</li>
+        </ul>
+        <h3 style="color:#fff; margin-top:20px;">Comportamiento Dual:</h3>
+        <p style="color:#bbb;">Al igual que <code>input::mouse</code>, si se proporciona un handle de ventana válido, el bloqueo solo se liberará si el evento ocurre <strong>dentro de los límites</strong> de dicha ventana y esta tiene el foco.</p>
+        <h3 style="color:#fff; margin-top:20px;">Ejemplo de Implementación:</h3>
+        <div class="function-example">
+            printf("Haz click derecho para continuar...");<br>
+            input::mousewait(nullptr, true, false); <span style="color:#6a9955;">// Espera presión de Click Derecho Global</span><br>
+            printf(" OK!\\n");
+        </div>
+        <div style="margin-top: 30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold); margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display: flex;flex-direction: column;align-items: center;">
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; height:100px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:30px;">🖱️⬅</div>
+                        <div style="color:var(--accent); font-weight:bold;">WAITING...</div>
+                    </div>
+                    <div style="font-size:24px;">➔</div>
+                    <div style="text-align:center;">
+                        <div style="font-size:30px; filter: drop-shadow(0 0 5px var(--accent));">🖱️✨</div>
+                        <div style="color:#0f0; font-weight:bold;">RELEASED</div>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; height:100px;">
+                    <div style="border: 2px solid #555;font-size: 7px;height: 100px;width: 128px;text-align: left;">Haz click derecho para continuar...</div>
+                    <div style="font-size:24px;">➔</div>
+                    <div style="border: 2px solid #555;font-size: 7px;height: 100px;width: 128px;text-align: left;">Haz click derecho para continuar... OK!</div>
+                </div>
+            </div>
+        </div>`,
+    ipt_keywait: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">input::keywait</h2>
+            <span style="background:var(--accent); color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px var(--accent);">Semi-REQ: #define ST_IMPORT_WINDOW</span>
+        </div>
+        <p>Bloquea el hilo hasta que una tecla específica (o cualquier tecla) sea accionada.</p>
+        <div class="function-firm">char keywait(void* wnd, char key = '\\0', bool dontPress = false);</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Puntero al acceso a ventana a consultar (Opcional, explicado mejor en los subsiguientes apartados de este articulo).</li>
+            <li><code>key</code>: La tecla específica a esperar, <code>'\\0'</code> para esperar <strong>cualquier</strong> tecla (Opcional, detección para tecla ASCII).</li>
+            <li><code>dontPress</code>: <code>true</code> para que la función espere a que la tecla <strong>no esté siendo presionada</strong>, <code>false</code> para lo contrario (Opcional).</li>
+        </ul>
+        <p><strong>Retorna:</strong> El carácter a la tecla que liberó el bloqueo.</p>
+        <h3 style="color:#fff; margin-top:20px;">Comportamiento Dual:</h3><ul style="color:#bbb;">
+            <li><strong>Modo Global (<code>wnd</code> = <code>nullptr</code>):</strong> Retorna detección de teclas, sin importar el programa/ventana foco.</li>
+            <li><strong>Modo Ventana (<code>wnd</code> = handle):</strong> Retorna detección de teclas, dependiendo si el acceso a ventana proporcionado posee el foco del cliente (Requiere <code>ST_IMPORT_WINDOW</code>).</li>
+        </ul>
+        <h3 style="color:#fff; margin-top:20px;">Ejemplo de Implementación:</h3>
+        <div class="function-example">
+            <span style="color:#6a9955;">// Espera a que el usuario presione la tecla 'x'</span><br>
+            char k = input::keywait(nullptr, 'x');<br>
+            printf("Has presionado: %c", k);
+        </div>
+        <div style="margin-top: 30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold); margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display:flex; justify-content:space-evenly; align-items:center; flex-wrap:wrap;">
+                <div style="border:1px solid #555; padding:10px; border-radius:4px; width:120px; text-align:center;">
+                    <code>key = ...</code><br>
+                    <small>Hilo pausado...</small>
+                </div>
+                <div style="font-size:20px;">➔</div>
+                <div style="padding:10px;border-radius:4px;border:1px solid var(--accent);width:120px;text-align:center;height: 32px;align-content:center;">⌨⬅X</div>
+                <div style="font-size:20px;">➔</div>
+                <div style="border:1px solid #0f0; padding:10px; border-radius:4px; width:120px; text-align:center;">
+                    <code>key = 'x'</code><br>
+                    <small>Hilo liberado</small>
+                </div>
+            </div>
+        </div>`,
+    ipt_mouse_show: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">input::mouse_show</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_WINDOW</span>
+        </div>
+        <p>Controla la visibilidad del cursor del ratón de forma global o con respecto a una ventana específica.</p>
+        <div class="function-firm">void* mouse_show(void* wnd, bool visible)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Puntero al acceso a ventana de contexto.</li>
+            <li><code>visible</code>: <code>true</code> para mostrar el puntero del sistema, <code>false</code> para ocultarlo.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero de <code>wnd</code> si la operación fue exitosa, <code>nullptr</code> en caso de fallar.</p>
+        <h3 style="color:#fff; margin-top:20px;">Ejemplo de Implementación:</h3>
+        <div class="function-example">
+            <span style="color:#6a9955;">// Oculta el mouse globalmente</span><br>
+            input::mouse_show(nullptr, false);<br><br>
+            <span style="color:#6a9955;">// Mostrar el mouse globalmente</span><br>
+            input::mouse_show(nullptr, true);
+        </div>
+        <div style="margin-top: 30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold); margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display:flex; justify-content:space-evenly; align-items:center; flex-wrap:wrap;margin-bottom:5px;">
+                <div style="border:1px solid #555; padding:10px; border-radius:4px; width:120px; text-align:center;">
+                    <span style="font-size:24px;">🖱️</span><br>
+                    <small>Visible</small>
+                </div>
+                <div style="font-size:20px;">➔</div>
+                <div style="padding:10px;border-radius:4px;border:1px solid var(--accent);width:120px;text-align:center;height: 48px;align-content:center; color:var(--accent);">
+                    <code>visible = false</code>
+                </div>
+                <div style="font-size:20px;">➔</div>
+                <div style="border:1px solid #f00; padding:10px; border-radius:4px; width:120px; text-align:center; opacity:0.5;">
+                    <span style="font-size:24px;">🚫</span><br>
+                    <small>Oculto</small>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-evenly; align-items:center; flex-wrap:wrap;">
+                <div style="border:1px solid #f00; padding:10px; border-radius:4px; width:120px; text-align:center; opacity:0.5;">
+                    <span style="font-size:24px;">🚫</span><br>
+                    <small>Oculto</small>
+                </div>
+                <div style="font-size:20px;">➔</div>
+                <div style="padding:10px;border-radius:4px;border:1px solid var(--accent);width:120px;text-align:center;height: 48px;align-content:center; color:var(--accent);">
+                    <code>visible = true</code>
+                </div>
+                <div style="font-size:20px;">➔</div>
+                <div style="border:1px solid #555; padding:10px; border-radius:4px; width:120px; text-align:center;">
+                    <span style="font-size:24px;">🖱️</span><br>
+                    <small>Visible</small>
+                </div>
+            </div>
+        </div>`,
+    ipt_mouse_capture: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">input::mouse_capture</h2>
+            <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_WINDOW</span>
+        </div>
+        <p>Controla el clipping del cursor del ratón de forma global o con respecto a una ventana específica. <span style="font-family: monospace;font-weight: bold;color: #f00;">(*)</span></p>
+        <div class="function-firm">void* mouse_capture(void* wnd, bool lock)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Puntero al acceso a ventana de contexto.</li>
+            <li><code>lock</code>: <code>true</code> para bloquear el puntero del sistema, <code>false</code> para desploquearlo.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero de <code>wnd</code> si la operación fue exitosa, <code>nullptr</code> en caso de fallar.</p>
+        <h3 style="color:#fff; margin-top:20px;">Ejemplo de Implementación:</h3>
+        <div class="function-example">
+            <span style="color:#6a9955;">// Bloquea el mouse dentro de nuestra ventana 'myWin'</span><br>
+            input::mouse_capture(myWin, true);
+        </div>
+        <div style="margin-top: 30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--perm-gold); margin-top:0;">Demostración Visual Esperada:</h4>
+            <div style="display:flex; justify-content:space-evenly; align-items:center; flex-wrap:wrap;">
+                <div style="border:1px solid #555; padding:10px; border-radius:4px; width:130px; text-align:center;">
+                    <small>Mouse Libre</small><br>
+                    <span style="font-size:20px;">🌐</span>
+                </div>
+                <div style="font-size:20px;">➔</div>
+                <div style="padding:10px;border-radius:4px;border:2px dashed var(--accent);width:130px;text-align:center;">
+                    <small style="color:var(--accent);">Atrapado</small><br>
+                    <span style="font-size:20px;">🔲</span>
+                </div>
+            </div>
+            <p style="font-size:11px; color:#888; margin-top:15px; text-align:center;"><span style="font-family: monospace;font-weight: bold;color: #f00;">(*)</span> En Linux, los inputs del mouse son limitados al interior del contenedor.</p>
+        </div>`,
+    window: `
+        <div style="text-align:center; padding: 40px 20px; background: linear-gradient(180deg, rgba(var(--accent-rgb),0.1) 0%, rgba(0,0,0,0) 100%); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px;">
+            <h1 style="color:var(--accent); font-size: 3em; margin:0; text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);">Namespace window</h1>
+            <p style="color:#fff; font-size: 1.2em; margin-top: 10px; font-weight: 300;">Gestión de Superficies Nativas y Contextos Gráficos</p>
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+                <span style="background:#0078d4; color:#fff; padding:4px 10px; border-radius:4px; font-size:11px; font-family:monospace;">Win32 API</span>
+                <span style="background:#ff6600; color:#fff; padding:4px 10px; border-radius:4px; font-size:11px; font-family:monospace;">X11 / LibX11</span>
+                <span style="background:#61dafb; color:#000; padding:4px 10px; border-radius:4px; font-size:11px; font-family:monospace;">Software Rendering</span>
+            </div>
+        </div>
+        <p style="font-size:1.1em; line-height:1.6; color:#ccc;">
+            El namespace <code>window</code> proporciona una capa de abstracción de alto nivel para la creación y manipulación de ventanas en entornos <strong>Windows</strong> y <strong>Linux</strong>. 
+            A diferencia de otras librerías pesadas, este módulo se enfoca en el rendimiento bruto, permitiendo el acceso directo al buffer de píxeles y el control total sobre los mensajes del sistema.
+        </p>
+        <h3 style="color:var(--accent); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Capacidades Nucleares:</h3>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; border-left: 4px solid var(--accent);">
+                <strong style="color:#fff; display:block; margin-bottom:5px;">Multiplataforma Nativa</strong>
+                Crea ventanas usando <code>CreateWindowEx</code> en Windows y <code>XCreateWindow</code> en Linux sin cambiar una sola línea de código.
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; border-left: 4px solid var(--perm-gold);">
+                <strong style="color:#fff; display:block; margin-bottom:5px;">Pixel-Perfect Access</strong>
+                Manipulación directa del arreglo de píxeles (ARGB) con sincronización automática al buffer de pantalla.
+            </div>
+            <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; border-left: 4px solid #0f0;">
+                <strong style="color:#fff; display:block; margin-bottom:5px;">Gestión de Mensajes</strong>
+                Sistema de hilos integrado para el despacho de eventos, evitando que la interfaz se congele durante procesos pesados.
+            </div>
+        </div>
+        <div style="margin-top: 40px; padding: 20px; background: rgba(var(--accent-rgb), 0.05); border: 1px dashed #444; border-radius: 8px;">
+            <p style="margin:0; font-style: italic; color: #888;">
+                "Una ventana no es solo un contenedor, es el puente entre tu lógica y la percepción del usuario."
+            </p>
+        </div>`,
+    window: `
+        <div style="line-height:1.6;">
+            <div style="padding-top:21px; padding-left: 1px; display: flex;justify-content: space-between;align-items: center;">
+                <h1 style="color:#fff; margin: 0px;">🖼️ Namespace window</h1>
+                <span style="height: 5%;background:#d7ba7d; color:#000; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px; box-shadow: 0 0 10px rgba(215, 186, 125, 0.2);">REQ: #define ST_IMPORT_WINDOW</span>
+            </div>
+            <h1 style="color:#fff; border-bottom: 2px solid var(--accent); padding-bottom: 10px;margin:0px;margin-top:1px;"></h1>
+            <p style="margin-top:20px;">Gestión de superficies nativas y contextos de renderizado. Este namespace abstrae la creación, destrucción y manipulación de ventanas, permitiendo el control total sobre el buffer de píxeles (Software Rendering) y el despacho de mensajes del sistema de forma asíncrona mediante hilos dedicados.</p>
+            <div class="note" style="border-left-color: var(--accent); background: rgba(0, 122, 204, 0.1); margin: 20px 0;"><strong>Nota de Estabilidad:</strong> Cada ventana creada mediante este namespace opera bajo su propio "Message Thread" (Hilo de Mensajes), garantizando que la lógica de renderizado no bloquee la respuesta del sistema operativo ante eventos de redimensionado o cierre.</div>
+            <div style="background: rgba(215, 186, 125, 0.05); border: 1px dashed #d7ba7d; padding: 15px; border-radius: 4px; margin-top: 10px;"><small style="color: #d7ba7d;">❗ <strong>Aclaración:</strong> Cada acceso (Handle) a ventana creado, requiere que se le ejecute <code>window::destroy</code> o <code>window::wait</code> para dar por concluida la vida util del mismo y permitir la liberación de recursos.</small></div>
+        </div>`,
+    wnd_enum_window_box: `
+        <h2 style="color:var(--perm-gold);">Enum: window_box</h2>
+        <p>Define los mensajes para comunicarse, con tu acceso (Handle) a ventana mediante <code>window::sendmessage</code>.</p>
+        <table style="width:100%; border-collapse: collapse; background:#1a1a1a; color:#ce9178; font-family:'Consolas';">
+            <tr style="border-bottom:1px solid #333;color:#888;">
+                <td style="padding:10px;">Nombre</td>
+                <td style="padding:10px;">Valor (Hexadecimal)</td>
+                <td style="padding:10px;">Descripción</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">def</td>
+                <td style="padding:10px;">0x0000</td>
+                <td style="padding:10px; color:#888;">Mensaje por defecto. Comunica que quieres ejecutar los protocolos primarios.</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">accepted</td>
+                <td style="padding:10px;">0x0001</td>
+                <td style="padding:10px; color:#888;">Mensaje procesado con exito. Comunica que tu mensaje fue correctamente recibido y procesado.</td>
+            </tr>
+            <tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">destroy</td>
+                <td style="padding:10px;">0x0002</td>
+                <td style="padding:10px; color:#888;">Destrucción. Comunica que quieres que la ventana sea destruida.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">size</td>
+                <td style="padding:10px;">0x0005</td>
+                <td style="padding:10px; color:#888;">Tamaño. Comunica que quieres cambiar el tamaño de la ventana.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">activate</td>
+                <td style="padding:10px;">0x0006</td>
+                <td style="padding:10px; color:#888;">Activación. Comunica que la ventana ha recibido el foco del usuario.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">paint</td>
+                <td style="padding:10px;">0x000F</td>
+                <td style="padding:10px; color:#888;">Pintar. Comunica a la ventana que refresque su buffer gráfico, para mostrar resultados al usuario.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">close</td>
+                <td style="padding:10px;">0x0010</td>
+                <td style="padding:10px; color:#888;">Cierre. Comunica que el usuario dio click en el boton superior para cerrar la ventana, lo que comunmente concluye con la vida util del acceso (Handle) a esa ventana.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">quit</td>
+                <td style="padding:10px;">0x0012</td>
+                <td style="padding:10px; color:#888;">Cierre abrupto. Comunica que el usuario o algun proceso del sistema cerró subitamente la ventana, teniendo el mismo efecto que con <code>window_box::close</code>.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">key_down</td>
+                <td style="padding:10px;">0x0100</td>
+                <td style="padding:10px; color:#888;">Tecla abajo. Comunica que una tecla fue presionada.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">key_up</td>
+                <td style="padding:10px;">0x0101</td>
+                <td style="padding:10px; color:#888;">Tecla arriba. Comunica que una tecla se dejó de presionar.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">mouse_move</td>
+                <td style="padding:10px;">0x0200</td>
+                <td style="padding:10px; color:#888;">Mouse moviendose. Comunica que el mouse se está moviendo dentro del cuadro gráfico de la ventana.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">lbutton_down</td>
+                <td style="padding:10px;">0x0201</td>
+                <td style="padding:10px; color:#888;">Botón izquierdo del mouse presionado.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">lbutton_up</td>
+                <td style="padding:10px;">0x0202</td>
+                <td style="padding:10px; color:#888;">Botón izquierdo del mouse con la presión finalizada.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">lbutton_hold</td>
+                <td style="padding:10px;">0x0203</td>
+                <td style="padding:10px; color:#888;">Botón izquierdo del mouse manteniendo presión.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">rbutton_down</td>
+                <td style="padding:10px;">0x0204</td>
+                <td style="padding:10px; color:#888;">Botón derecho del mouse presionado.</td>
+            </tr><tr style="border-bottom:1px solid #333;">
+                <td style="padding:10px;">rbutton_up</td>
+                <td style="padding:10px;">0x0205</td>
+                <td style="padding:10px; color:#888;">Botón derecho del mouse con la presión finalizada.</td>
+            </tr><tr>
+                <td style="padding:10px;">rbutton_hold</td>
+                <td style="padding:10px;">0x0206</td>
+                <td style="padding:10px; color:#888;">Botón derecho del mouse manteniendo presión.</td>
+            </tr>
+        </table>`,
+    wnd_defMailMan: `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="color:var(--accent); margin:0;">window::defMailMan</h2>
+            <span style="background:#555; color:#fff; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px;">Example Template</span>
+        </div>
+        <p>Ejemplo de una función que recibe, procesa y envia mensajes a su ventana de origen. Es la función por defecto que se utiliza para un acceso a ventana cuando se realiza un <code>window::create</code>. Al ser de contenido apto para edición y revisión incondicional<br>(<span style="background:#555; color:#fff; padding:5px 12px; border-radius:4px; font-family:'Consolas', monospace; font-weight:bold; font-size:12px;">Example Template</span>), usted como programador tiene el permiso para poder editarla segun crea conveniente, aunque se recomienda comunmente crear y utilizar sus propias funciones que coincidan bajo la firma de esta función.</p>
+        <div class="function-firm">UWORD defMailMan(void* wnd, UWORD msg, UWORD wp, WORD lp)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a ventana que origina el mensaje.</li>
+            <li><code>msg</code>: Identificador del mensaje (ej: <code>window_box::paint</code>, <code>window_box::close</code>).</li>
+            <li><code>wp</code>: Parámetro adicional largo del mensaje (WPARAM).</li>
+            <li><code>lp</code>: Parámetro adicional corto del mensaje (LPARAM).</li>
+        </ul>
+        <p><strong>Retorna:</strong> Una palabra sin signo con el valor que representa un identificador de mensaje.</p>
+        <div class="note" style=""><strong>Tip:</strong> ¿Cansado de tener que soportar la existencia de <code>window::defMailMan</code> en tu proyecto? Prueba definiendo la macro de importación <code>ST_STOP_MAILMAN_DECL</code>, y asi ahorraras algunos KBs en tu binario ejecutable.</div>
+        <p><strong>Contenido Interno:</strong></p><div class="function-example">
+            UWORD defMailMan(void* wnd, UWORD msg, UWORD wp, WORD lp){<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;switch(msg){<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case window_box::destroy: case window_box::close:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window::destroy(wnd, false);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return window_box::accepted;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return window_box::def;<br>
+            }
+        </div>`,
+    wnd_create: `
+        <h2 style="color:var(--accent); margin:0;">window::create</h2>
+        <p>Inicializa un nuevo acceso (Handle) a ventana virgen (Creado y propio de tu programa en forma de recurso nativo), reservando memoria para el buffer de píxeles e inicia el hilo de despacho de mensajes superior (El que <strong>System Tools</strong> utilizará para administrar la ventana internamente).</p>
+        <div class="function-firm">void* create(void* father, const char* title, unsigned int width, unsigned int height, UWORD(*mailman)(void*,UWORD,UWORD,WORD) = window::defMailMan)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>father</code>: Acceso a ventana padre (Opcional).</li>
+            <li><code>title</code>: Puntero constante al texto que servirá de titulo (Para no tener titulo, solo utiliza <code>""</code>).</li>
+            <li><code>width</code>: Número entero sin signo que representa la longitud horizontal inicial de la ventana en pixeles reales.</li>
+            <li><code>height</code>: Número entero sin signo que representa la longitud vertical inicial de la ventana en pixeles reales.</li>
+            <li><code>mailman</code>: Puntero a función con la misma firma que <code>window::defMailMan</code>, que le permitirá al programador administrar y procesar los mensajes de la ventana (Opcional, en caso de que el propio <code>window::defMailMan</code> exista).</li>
+        </ul>
+        <p><strong>Retorna:</strong> Un puntero al acceso (Handle) a ventana creado. Este puntero es necesario para cualquier operación posterior sobre esa misma ventana creada.</p>
+        <p><strong>Flujo de Operaciones interna:</strong></p><ol style="color:#bbb; line-height:1.8;">
+            <li>Reservar y validar el acceso.</li>
+            <li>Creación de adaptadores a plataformas nativas.</li>
+            <li>Asignación del buffer de píxeles (Bitmap RGBA).</li>
+            <li>Lanzamiento del hilo de mensajes asíncrono interno y retorno del acceso al programa principal.</li>
+        </ol>
+        <p><strong>Ejemplo de uso:</strong></p><div class="function-example">
+            <span style="color:#6a9955;">// Crear una ventana independiente (Sin padre asociado), con el titulo "Nueva Ventana" y que mide 800x600 pixeles.</span><br>
+            void* myWin = window::create(nullptr, "Nueva Ventana", 800, 600);
+        </div>
+        <p><strong>Cosas a tener en cuenta:</strong></p><ul>
+            <li>Si la ventana yá cumplió su vida util, eliminalá utilizando <code>window::destroy</code> o <code>window::wait</code>, para evitar acumulación de datos en la RAM en el HEAP de tu programa y para darle la orden a la ventana que se destruya.</li>
+            <li>En caso de que la ventana no sea destruida, lo hará el usuario, el sistema, la finalización o cancelación del programa.</li>
+            <li>En caso de que la ventana posea un padre asociado, se le considerará una "Ventana dependiente". Cuya existencia está subordinada a la existencia de su padre asociado.</li>
+        </ul>`,
+    wnd_wait: `
+        <h2 style="color:var(--accent); margin:0;">window::wait</h2>
+        <p>Bloquea la ejecución del hilo actual hasta que la ventana especificada sea cerrada por el usuario o destruida por el sistema. Es la forma estándar de mantener vivo el programa principal mientras la interfaz está activa.</p>
+        <div class="function-firm">void* wait(void* wnd)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana que se desea esperar.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero <code>wnd</code> una vez que el hilo ha sido liberado (la ventana ya no existe).</p>
+        <div class="note"><strong>Importante:</strong> Al finalizar el bloqueo de <code>window::wait</code>, los recursos asociados al Handle son liberados automáticamente, por lo que no es necesario llamar a <code>window::destroy</code> posteriormente.</div>
+        <p><strong>Ejemplo de uso:</strong></p><div class="function-example">
+            void* myWin = window::create(nullptr, "App", 800, 600);<br>
+            <span style="color:#6a9955;">// El programa se detiene aquí hasta que cierres la ventana</span><br>
+            window::wait(myWin);
+        </div>`,
+    wnd_destroy: `
+        <h2 style="color:var(--accent); margin:0;">window::destroy</h2>
+        <p>Ordena la destrucción inmediata de la ventana y la liberación de todos sus recursos asociados (buffer de píxeles, hilos y adaptadores nativos).</p>
+        <div class="function-firm">void* destroy(void* wnd, bool _wait = true)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana a destruir.</li>
+            <li><code>_wait</code>: Si es <code>true</code>, la función esperará a que el hilo de mensajes termine de cerrarse antes de retornar. Si es <code>false</code>, la orden se envía y la función retorna inmediatamente (Recomendado para asíncronia).</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero almacenado en el parámetro <code>wnd</code> tras una destrucción exitosa. <code>nullptr</code> si falla, el parámetro <code>wnd</code> ya de por sí era <code>nullptr</code> o un acceso invalido.</p>
+        <p><strong>Comportamiento:</strong></p><ul style="color:#bbb;">
+            <li>Detiene el hilo de despacho de mensajes interno.</li>
+            <li>Libera la memoria del buffer RGBA en el HEAP.</li>
+            <li>Invalida el puntero del acceso para evitar usos accidentales posteriores.</li>
+        </ul>`,
+    wnd_sendmessage: `
+        <h2 style="color:var(--accent); margin:0;">window::sendmessage</h2>
+        <p>Envía un mensaje directo al <code>mailman</code> (gestor de mensajes) de la ventana especificada. Permite interactuar con la ventana desde hilos externos o forzar eventos de actualización.</p>
+        <div class="function-firm">void* sendmessage(void* wnd, UWORD msg, UWORD wp, WORD lp)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Ventana destino del mensaje.</li>
+            <li><code>msg</code>: Identificador del mensaje (Ver <code style="color:var(--perm-gold);">Enum: window_box</code>).</li>
+            <li><code>wp</code>: Parámetro adicional largo del mensaje (WPARAM).</li>
+            <li><code>lp</code>: Parámetro adicional corto del mensaje (LPARAM).</li>
+        </ul>
+        <p><strong>Retorna:</strong> El resultado del procesamiento del mensaje retornado por el <code>mailman</code>.</p>
+        <div style="margin-top: 30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; border: 1px solid #444;">
+            <h4 style="color:var(--accent); margin-top:0;">Demostración de Flujo:</h4>
+            <div style="display:flex;width:100%;justify-content:center;"><div style="text-align:center;font-size:12px;width: 508px;height: 210px;">
+                <div style="border:1px solid #555;padding:10px;border-radius:4px;width: 100px;position: relative;">Programa Principal</div>
+                <div style="color:var(--accent);font-family:monospace;width: 100px;position: relative;left: 60px;text-align: left;line-height: 117%;">┃<br>┃<br>┗━━<code>sendmessage</code>━━▶</div>
+                <div style="border:1px solid var(--accent);padding:10px;border-radius:4px;width: 100px;position: relative;top: -33px;left: 193px;">MailMan (Threaded)</div>
+                <div style="color: #900;font-family:monospace;width: 100px;position: relative;top: -97px;left: 350px;text-align: right;line-height: 117%;">▲<br>┃<br>◀━━━━━━<code>MEM</code>━━┫<br>┃<br>▼</div>
+                <div style="color: #900;font-family:monospace;width: 100px;position: relative;top: -200px;left: 204px;text-align: right;line-height: 117%;">◀━━━━<code>MEM</code>━━━━▶</div>
+                <div style="color:#0f0;font-family:monospace;width: 100px;line-height: 90%;position: relative;top: -117px;left: 192px;">
+                    <div style="left: 14px;position: relative;z-index: 0;">▲<br>┃<br>┃<br></div>
+                    <div>◀━━<code style="z-index: 1;position: relative;">WINDOWPROC</code>━━▶</div>
+                </div>
+                <div style="border: 1px solid #0F0;padding:10px;border-radius:4px;width: 100px;position: relative;top: -148px;left: 386px;">🖼️<br>Window</div>
+                <div style="border: 1px solid #900;padding:10px;border-radius:4px;width: 100px;position: relative;top: -332px;left: 386px;">RAM<br>Memory</div>
+                <div style="border: 1px solid #F0F;padding:10px;border-radius:4px;width: 100px;position: relative;top: -256px;">Internal Adapter<br>Window Proccesor</div>
+            </div></div>
+            <ol>
+                <li>El Programa Principal le envia el mensaje al MailMan, por medio de la función <code>window::sendmessage</code>.</li>
+                <li>El MailMan envia inmediatamente el mensaje al Internal Adapter Window Proccesor, por medio del <code>WINDOWPROC</code>, para que él decida que hacer.</li>
+                <li>El Internal Adapter Window Proccesor recibe el mensaje, lo transforma, reinterpreta y envia los resultados del mismo (De ser posibles) al MailMan de una forma que este sea capas de comprender, reflejando los resultados en Window. Utilizando como medio de desplazamiento a <code>WINDOWPROC</code></li>
+                <li>MailMan recibe la reinterpretación de Internal Adapter Window Proccesor, ejecutandose y devolviendole el resultado.</li>
+                <li>Se repite el proceso 3, pero utilizando la reinterpretación de MailMan obtenida en el proceso 4, y sin enviarle resultados a MailMan.</li>
+            </ol><ul>
+                <li>El Programa principal puede interactuar, por medio del uso de la RAM Memory, con MailMan (De haber utilizado uno personalizado) y con los atributos de Window.</li>
+            </ul>
+        </div>`,
+    wnd_draw: `
+        <h2 style="color:var(--accent); margin:0;">window::draw</h2>
+        <p>Copia un bloque de píxeles (sprite) directamente al buffer de la ventana en una posición específicada.</p>
+        <div class="function-firm">void* draw(void* wnd, int offsetX, int offsetY, unsigned int* _pixels, unsigned int _width, unsigned int _height)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana destino.</li>
+            <li><code>offsetX</code>: Posición del eje horizontal relativa a la ventana donde se empezará a dibujar.</li>
+            <li><code>offsetY</code>: Posición del eje vertical relativa a la ventana donde se empezará a dibujar.</li>
+            <li><code>_pixels</code>: Puntero al arreglo de colores (0x00RRGGBB) de la fuente (Nota: No se procesará la transparencia).</li>
+            <li><code>_width</code>: Longitud horizontal de la imagen fuente.</li>
+            <li><code>_height</code>: Longitud vertical de la imagen fuente.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero <code>wnd</code> si la operación se realizó correctamente. <code>nullptr</code> si falla, el acceso era invalido o el puntero  o la cantidad de pixeles a dibujar es nula.</p>
+        <div class="note"><strong>Nota de Clipping:</strong>
+            La función realiza automáticamente el recorte (clipping). Si intentas dibujar una imagen de 100x100 en el borde de la ventana, solo se procesarán los píxeles visibles. Si intentas dibujar la imagen fuera del campo visible, la función retornará el puntero <code>wnd</code>, porque teoricamente sí dibujó la imagen.
+        </div>`,
+    wnd_pixels: `
+        <h2 style="color:var(--accent); margin:0;">window::pixels</h2>
+        <p>Obtiene el acceso directo al buffer de memoria de la ventana. Es la herramienta definitiva para motores gráficos personalizados o manipulación de píxeles de bajo nivel.</p>
+        <div class="function-firm">void pixels(void* wnd, unsigned int** _px, UWORD* _px_am)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana.</li>
+            <li><code>_px</code>: Puntero donde se almacenará la dirección de memoria del primer píxel (Base del Bitmap).</li>
+            <li><code>_px_am</code>: Puntero donde se almacenará la cantidad total de píxeles (Ancho * Alto).</li>
+        </ul>
+        <div style="background: rgba(215, 186, 125, 0.05); border: 1px dashed #d7ba7d; padding: 15px; border-radius: 4px; margin-top: 10px;"><small style="color: #d7ba7d;">⚠️ <strong>Advertencia:</strong>
+            Modificar el buffer obtenido no refleja cambios inmediatos en pantalla hasta que se envíe un mensaje <code>window_box::paint</code>, o bien la ventana sea minimizada.</small>
+        </div>`,
+    wnd_clear: `
+        <h2 style="color:var(--accent); margin:0;">window::clear</h2>
+        <p>Inunda todo el buffer de la ventana con un color específico, limpiando cualquier dibujo previo.</p>
+        <div class="function-firm">void* clear(void* wnd, unsigned int _color = 0x000000)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana.</li>
+            <li><code>_color</code>: Color en formato hexadecimal en RGB (Ej: <code>0xFF0000</code> para rojo sólido). Por defecto es negro absoluto, para terminos practicos.</li>
+        </ul>
+        <p><strong>Retorna:</strong> <code>nullptr</code> si el acceso es invalido, sino el puntero <code>wnd</code>.</p>
+        <p><strong>Ejemplo de uso:</strong></p><div class="function-example">
+            <span style="color:#6a9955;">// Limpia el area gráfica de la ventana con un color gris oscuro</span><br>
+            window::clear(myWin, 0x222222);
+        </div>`,
+    wnd_resize: `
+        <h2 style="color:var(--accent); margin:0;">window::resize</h2>
+        <p>Modifica las dimensiones y/o la ubicación de la ventana en el espacio de escritorio. Esta función es un envoltorio inteligente sobre los mensajes de transformación nativos.</p>
+        <div class="function-firm">void* resize(void* wnd, int _x, int _y, int _width, int _height, bool SetPosition = false, bool SetSize = true)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana a transformar.</li>
+            <li><code>_x</code>: Nuevo eje horizontal de origen.</li>
+            <li><code>_y</code>: Nuevo eje vertical de origen.</li>
+            <li><code>_width</code>: Nueva longitud horizontal en píxeles.</li>
+            <li><code>_height</code>: Nueva longitud vertical en píxeles.</li>
+            <li><code>SetPosition</code>: Si es <code>true</code>, se aplicará el cambio de coordenadas a partir de los parámetros <code>_x</code> e <code>_y</code>.</li>
+            <li><code>SetSize</code>: Si es <code>true</code>, se aplicará el cambio de dimensiones a partir de los parámetros <code>_width</code> y <code>_height</code>.</li>
+        </ul>
+        <p><strong>Retorna:</strong> <code>nullptr</code> si el acceso es invalido o algo fallo, sino el puntero <code>wnd</code>.</p>
+        <div class="note" style="border-left-color: #007acc;">
+            <strong>Nota de Buffer:</strong> Al cambiar el tamaño (<code>SetSize = true</code>), el sistema reasigna automáticamente el buffer de píxeles interno para coincidir con las nuevas dimensiones, lo que puede causar una invalidación momentánea del puntero obtenido previamente con <code>window::pixels</code>. Se recomienda obtener nuevamente el puntero a los pixeles del buffer por cada cambio de tamaño.
+        </div>`,
+    wnd_getsize: `
+        <h2 style="color:var(--accent); margin:0;">window::getsize</h2>
+        <p>Recupera la geometría actual de la ventana desde el sistema operativo. Esencial para algoritmos de renderizado responsivo o para guardar el estado de la aplicación.</p>
+        <div class="function-firm">void getsize(void* wnd, int* _x, int* _y, int* _width, int* _height)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana a consultar.</li>
+            <li><code>_x</code>: Puntero donde se escribirá la longitud del eje horizontal actual (pueden ser <code>nullptr</code> si no se requiere el dato).</li>
+            <li><code>_y</code>: Puntero donde se escribirá la longitud del eje vertical actual (pueden ser <code>nullptr</code> si no se requiere el dato).</li>
+            <li><code>_width</code>: Puntero donde se escribirá la longitud del lado horizontal actual (pueden ser <code>nullptr</code> si no se requiere el dato).</li>
+            <li><code>_height</code>: Puntero donde se escribirá la longitud del lado vertical actual (pueden ser <code>nullptr</code> si no se requiere el dato).</li>
+        </ul>
+        <p><strong>Retorna:</strong> <code>nullptr</code> si el acceso es invalido, sino el puntero <code>wnd</code>.</p>
+        <p><strong>Ejemplo de uso:</strong></p><div class="function-example">
+            int w, h;<br>
+            window::getsize(myWin, nullptr, nullptr, &w, &h);<br>
+            printf("Resolución actual: %d x %d", w, h);
+        </div>`,
+    wnd_retitle: `
+        <h2 style="color:var(--accent); margin:0;">window::retitle</h2>
+        <p>Actualiza dinámicamente el texto mostrado en la barra de título de la ventana.</p>
+        <div class="function-firm">void* retitle(void* wnd, const char* title)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana.</li>
+            <li><code>title</code>: Puntero al nuevo texto de título.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero <code>wnd</code> tras aplicar el cambio en el sistema operativo, <code>nullptr</code> si el acceso es invalido o hubo algun fallo.</p>`,
+    wnd_gettitle: `
+        <h2 style="color:var(--accent); margin:0;">window::gettitle</h2>
+        <p>Recupera la información descriptiva actual de la ventana, incluyendo su título y su estado de visibilidad mínima.</p>
+        <div class="function-firm">void* gettitle(void* wnd, char** title, bool* minimized)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana a consultar.</li>
+            <li><code>title</code>: Puntero a una dirección de memoria donde se devolverá la nueva cadena de texto del título actual copiado y almacenado en ella.</li>
+            <li><code>minimized</code>: Puntero a booleano que recibirá <code>true</code> si la ventana se encuentra actualmente minimizada en la barra de tareas.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero <code>wnd</code>, <code>nullptr</code> si el acceso es invalido o hubo algun fallo.</p>`,
+    wnd_father: `
+        <h2 style="color:var(--accent); margin:0;">window::father</h2>
+        <p>Consulta el origen jerárquico de la ventana para determinar si es una ventana dependiente.</p>
+        <div class="function-firm">void* father(void* wnd)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana hija.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El acceso (Handle) de la ventana padre. Si la ventana es independiente (Top-level), retornará <code>nullptr</code>.</p>`,
+    wnd_getscreen: `
+        <h2 style="color:var(--accent); margin:0;">window::getscreen</h2>
+        <p>Obtiene las dimensiones totales del monitor principal o del escritorio virtual. Esencial para centrar ventanas o crear aplicaciones a pantalla completa.</p>
+        <div class="function-firm">void getscreen(int* _width, int* _height)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>_width</code>: Punteros donde se almacenará la resolución horizontal del sistema.</li>
+            <li><code>_height</code>: Punteros donde se almacenará la resolución vertical del sistema.</li>
+        </ul>
+        <div class="note">
+            <strong>Nota de Contexto:</strong> A diferencia de <code>getsize</code>, esta función no requiere un <code>wnd</code> ya que consulta directamente al driver de pantalla a través del adaptador nativo (GDI en Windows / DefaultScreen en X11).
+        </div>`,
+    wnd_show: `
+        <h2 style="color:var(--accent); margin:0;">window::show</h2>
+        <p>Altera el estado de visibilidad de la ventana en el entorno de escritorio.</p>
+        <div class="function-firm">void* show(void* wnd, bool visible, bool minimize = false)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana.</li>
+            <li><code>visible</code>: <code>true</code> para mostrar la ventana, <code>false</code> para ocultarla (manteniendo su hilo de ejecución activo).</li>
+            <li><code>minimize</code>: Si es <code>true</code>, la ventana se enviará a la barra de tareas (Opcional).</li>
+        </ul>
+        <p><strong>Retorna:</strong> <code>nullptr</code> si el acceso es invalido, sino el puntero <code>wnd</code>.</p>`,
+    wnd_focus: `
+        <h2 style="color:var(--accent); margin:0;">window::focus</h2>
+        <p>Solicita al sistema operativo que traiga la ventana al primer plano y le otorgue el foco de entrada de teclado y ratón.</p>
+        <div class="function-firm">void* focus(void* wnd)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana que reclama el foco.</li>
+        </ul>
+        <p><strong>Retorna:</strong> <code>nullptr</code> si el acceso es invalido, sino el puntero <code>wnd</code>.</p>`,
+    wnd_focuswait: `
+        <h2 style="color:var(--accent); margin:0;">window::focuswait</h2>
+        <p>Detiene la ejecución del hilo actual hasta que la ventana especificada obtenga el foco del usuario (se convierta en la ventana activa).</p>
+        <div class="function-firm">void* focuswait(void* wnd)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana que se desea esperar.</li>
+        </ul>
+        <p><strong>Retorna:</strong> El puntero <code>wnd</code> tras detectar el foco.</p>`,
+    wnd_active: `
+        <h2 style="color:var(--accent); margin:0;">window::active</h2>
+        <p>Consulta al sistema operativo cuál es la ventana que posee actualmente el foco de entrada.</p>
+        <div class="function-firm">void* active()</div>
+        <p><strong>Retorna:</strong> Un acceso (Handle) a la ventana activa. </p>
+        <div class="note"><strong>Nota:</strong> Esta función puede retornar un handle a una ventana que no pertenece a tu proceso si el usuario está interactuando con otra aplicación.</div>
+        <h3 style="color:#fff; margin-top:20px;">⚠️ Restricciones de Acceso Externo:</h3>
+        <p>Cuando el handle retornado pertenece a una ventana externa (<code>is_extern() == true</code>), el sistema entra en un <strong>Modo de Protección de Memoria</strong>. Para evitar fallos críticos de segmentación (<code>Segfault</code>), se deshabilitan las siguientes funciones:</p>
+        <table style="width:100%; border-collapse: collapse; background:rgba(255,0,0,0.05); color:#ff9999; font-family:'Consolas'; margin-bottom:15px; border: 1px solid rgba(255,0,0,0.2);">
+            <tr style="border-bottom:1px solid rgba(255,0,0,0.2); color:#ff5555;">
+                <td style="padding:10px;"><strong>Categoría</strong></td>
+                <td style="padding:10px;"><strong>Funciones Prohibidas</strong></td>
+            </tr>
+            <tr>
+                <td style="padding:10px;">Renderizado Directo</td>
+                <td style="padding:10px;"><code>draw</code>, <code>pixels</code>, <code>clear</code></td>
+            </tr>
+            <tr>
+                <td style="padding:10px;">Consulta de Atributos</td>
+                <td style="padding:10px;"><code>getsize</code>, <code>gettitle</code>, <code>father</code></td>
+            </tr>
+        </table>
+        <h3 style="color:#fff; margin-top:10px;">✅ Funciones Disponibles:</h3>
+        <p>Las funciones de control de flujo siguen operativas mediante la inyección de mensajes en el sistema de mensajería del OS:</p><ul>
+            <li><code>window::sendmessage</code>: Comunicación directa con el procedimiento de ventana del sistema.</li>
+            <li><code>window::destroy</code>: Solicita el cierre de la ventana externa.</li>
+            <li><code>window::wait</code>: Bloquea el hilo hasta que la ventana externa desaparezca.</li>
+        </ul>
+        <div style="background: rgba(215, 186, 125, 0.05); border: 1px dashed #d7ba7d; padding: 15px; border-radius: 4px; margin-top: 10px;">
+            <small style="color: #d7ba7d;">💡 <strong>Seguridad:</strong> Utilice siempre <code>window::is_extern</code> tras llamar a <code>active()</code> para validar qué operaciones son seguras de realizar sobre el handle obtenido.</small>
+        </div>`,
+    wnd_is_extern: `
+        <h2 style="color:var(--accent); margin:0;">window::is_extern</h2>
+        <p>Determina la naturaleza del origen de un acceso a ventana.</p>
+        <div class="function-firm">bool is_extern(void* wnd)</div>
+        <p><strong>Parámetros:</strong></p><ul>
+            <li><code>wnd</code>: Acceso a la ventana a validar.</li>
+        </ul>
+        <p><strong>Retorna:</strong> <code>true</code> si la ventana fue creada por un proceso externo al programa actual; <code>false</code> si es una ventana propia creada mediante <code>window::create</code>.</p>
+        <div style="background: rgba(215, 186, 125, 0.05); border: 1px dashed #d7ba7d; padding: 15px; border-radius: 4px; margin-top: 10px;">
+            <small style="color: #d7ba7d;">💡 <strong>Uso común:</strong> Ideal para filtrar eventos o evitar intentar manipular recursos internos (como el buffer de píxeles) en ventanas de terceros donde no tenemos acceso a la memoria RAM del proceso.</small>
+        </div>`,
+    todo_listo: `
+        <div style="padding: 40px; background: rgba(var(--accent-rgb), 0.03); border: 2px dashed rgba(215, 186, 125, 0.3); border-radius: 15px; text-align: center;">
+            <div style="margin-bottom: 25px;">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="174.9443" height="121.41982" viewBox="0,0,174.9443,121.41982"><g transform="translate(-151.73998,-121.03023)"><g stroke-miterlimit="10"><g stroke="#000000" stroke-width="3.5" stroke-linecap="butt"><path d="M172.89365,181.98918v-50.63419h137.49441v50.63419z" fill="#350009"/><path d="M197.2798,142.57388v27.35752c0,0 0.08562,5.48379 -0.8826,8.73017c-0.96826,3.24641 -2.61132,2.98447 -2.61132,2.98447h-20.63558v-50.2419h20.63558c0,0 1.82164,-0.50771 2.75842,2.48707c0.93678,2.99478 0.73551,8.68267 0.73551,8.68267z" fill="#5b000e"/><path d="M325.81688,142.67305v27.35752c0,0 0.08562,5.48379 -0.8826,8.73017c-0.96823,3.24641 -2.6113,2.98447 -2.6113,2.98447h-20.63558v-50.2419h20.63558c0,0 1.82164,-0.50771 2.75839,2.48707c0.93678,2.99478 0.73551,8.68267 0.73551,8.68267z" fill="#880015"/><path d="M216.62976,122.95922h2.79125c0,0 3.77765,-0.19947 6.01405,2.05591c2.23637,2.2554 2.05591,6.08267 2.05591,6.08267h-18.55575c0,0 -0.34977,-4.24326 1.71327,-6.42534c2.06303,-2.18206 5.98131,-1.71327 5.98131,-1.71327z" fill="#ffffff"/><path d="M264.96885,122.78474h2.79122c0,0 3.77765,-0.19947 6.01405,2.05591c2.23637,2.2554 2.05594,6.08267 2.05594,6.08267h-18.55578c0,0 -0.34977,-4.24326 1.71327,-6.42534c2.06303,-2.18206 5.98131,-1.71327 5.98131,-1.71327z" fill="#ffffff"/></g><g stroke="#000000"><path d="M246.94836,202.65442l22.37206,-45.08003c0,0 -2.66275,-4.34496 0.55481,-11.36288c2.71687,-5.92585 9.48421,-7.12705 15.33414,-4.16059c5.84993,2.96647 10.17833,8.26889 6.75774,15.36328c-2.88917,5.99222 -8.90572,6.97948 -8.90572,6.97948l-22.37206,45.08003c0,0 2.63087,5.02894 -1.0188,12.03895c-2.15108,4.13162 -9.99021,6.90213 -15.8452,3.9277c-5.85499,-2.97443 -8.22168,-9.13384 -5.53038,-14.78683c3.35451,-7.04604 8.65341,-7.99912 8.65341,-7.99912z" fill="#969696" stroke-width="4.5" stroke-linecap="butt"/><path d="M280.7685,151.93339l4.1531,-8.36856" fill="none" stroke-width="6" stroke-linecap="round"/><path d="M249.25038,215.20936l-4.1531,8.36857" fill="none" stroke-width="4" stroke-linecap="round"/></g><g stroke="#000000" stroke-width="2"><path d="M197.72422,224.93956c-0.86939,-0.78598 -1.64679,-2.84913 -1.64679,-2.84913c0,0 -5.89247,-27.7647 -6.94867,-32.74137c-0.2945,-1.38767 0.653,-3.0614 0.94582,-4.54569c0.29282,-1.48429 -0.01167,-3.29446 -0.01167,-3.29446l-4.59776,-21.43276l12.29879,-2.61016l4.79288,21.38821c0,0 0.43335,1.97455 1.03834,3.07972c0.60499,1.10517 1.89825,2.39722 2.17671,3.70932c1.03887,4.89506 7.05449,33.23997 7.05449,33.23997c0,0 0.62183,1.86915 0.08044,2.83418c-0.54139,0.96503 -2.55986,1.58539 -2.55986,1.58539l-10.47059,2.22216c0,0 -1.28274,0.20061 -2.15213,-0.58537z" fill="#965700" stroke-linecap="butt"/><path d="M220.05983,146.31059c0,0 -2.80756,3.70965 -7.08084,4.28173c-4.27329,0.57208 -7.7678,-3.38068 -10.65233,-1.90773c-2.88454,1.47294 -1.57054,8.14917 -1.57054,8.14917l-16.75091,3.72872c0,0 0.03848,-3.47996 -2.55398,-4.66854c-1.07431,-0.49255 -1.84314,-0.67937 -1.84314,-0.67937c0,0 -1.2202,2.96695 -5.45974,4.02049c-4.67546,1.16187 -8.96008,-1.82448 -9.90337,-5.86165c-1.04238,-4.46124 2.52486,-9.33863 5.74823,-10.125c3.37943,-0.82443 7.58175,1.80598 7.58175,1.80598l2.89283,-1.97816c0,0 3.73952,-5.48828 6.2899,-6.37178c2.55039,-0.8835 6.65337,1.88799 6.65337,1.88799c0,0 7.16375,-1.68506 13.02935,0.01377c5.8656,1.69882 13.61941,7.70439 13.61941,7.70439z" fill="#969696" stroke-linecap="round"/></g><path d="M177.40125,175.53347c-0.37926,1.73964 -2.09697,2.84245 -3.83661,2.46319c-1.29441,-0.28219 -10.00217,-3.06063 -11.00216,-3.54685c-0.99999,-0.48621 -1.64159,-0.90604 -1.30044,-2.43485c0.34114,-1.52881 1.58182,-1.4835 2.17485,-1.48378c4.51217,-0.00211 10.20174,0.88237 11.50118,1.16566c1.73964,0.37926 2.84245,2.09697 2.4632,3.83662z" fill="#ffadad" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><path d="M197.82506,169.58994c0.60955,2.89884 -1.2463,5.74295 -4.14514,6.3525c-2.15693,0.45354 -17.26659,2.16882 -19.11563,2.11212c-1.84904,-0.0567 -3.10888,-0.25681 -3.63265,-2.80968c-0.52377,-2.55286 1.39023,-3.32935 2.29014,-3.73379c6.8472,-3.07726 16.08547,-5.61098 18.25078,-6.06629c2.89884,-0.60955 5.74295,1.2463 6.3525,4.14514z" fill="#ffadad" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><path d="M168.26767,173.56933c0.25489,-1.16919 2.09748,-1.76035 4.11554,-1.3204c2.01806,0.43995 3.44737,1.74442 3.19248,2.91361c-0.25489,1.16919 -2.09748,1.76035 -4.11554,1.3204c-2.01806,-0.43995 -3.44737,-1.74442 -3.19248,-2.91361z" fill="#ffadad" stroke="none" stroke-width="0" stroke-linecap="butt"/><path d="M190.84487,146.43517c0.77752,-0.69734 2.31741,-0.66654 2.31741,-0.66654h15.48428c0,0 1.17081,0.16637 2.0509,0.9229c0.88009,0.75654 0.94209,1.64988 0.94209,1.64988l0.04223,5.98971l5.06641,-0.0244c0,0 1.81366,-0.26136 2.72701,0.75225c0.91335,1.01361 0.76908,3.12762 0.76908,3.12762v17.43264c0,0 0.14998,1.4484 -0.71782,2.16348c-0.8678,0.71508 -2.77885,0.71781 -2.77885,0.71781h-23.89297c0,0 -1.25692,0.15998 -2.00977,-0.56399c-0.75284,-0.72397 -0.66654,-2.00966 -0.66654,-2.00966v-27.48204c0,0 -0.11098,-1.31232 0.66654,-2.00966z" fill="#808080" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><path d="M228.50106,176.22071c0,-2.96223 2.40137,-5.3636 5.3636,-5.3636c2.96223,0 5.3636,2.40136 5.3636,5.3636c0,2.96223 -2.40136,5.3636 -5.3636,5.3636c-2.96223,0 -5.3636,-2.40137 -5.3636,-5.3636z" fill="#ffadad" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><path d="M237.76168,175.35887c0,-2.96223 2.40137,-5.3636 5.3636,-5.3636c2.96223,0 5.36359,2.40136 5.36359,5.3636c0,2.96223 -2.40136,5.3636 -5.36359,5.3636c-2.96223,0 -5.3636,-2.40137 -5.3636,-5.3636z" fill="#ffadad" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><g stroke="#000000"><path d="M232.51278,152.21981l11.74772,-7.69434c0,0 0.69413,-0.48683 1.39704,-0.35993c0.70291,0.1269 1.08421,0.80787 1.08421,0.80787l2.20494,3.3665c0,0 0.51044,0.7082 0.33167,1.35389c-0.17877,0.64569 -1.02571,1.15287 -1.02571,1.15287l-11.64413,7.6265z" fill="#808080" stroke-width="2.5" stroke-linecap="butt"/><g><path d="M211.73558,154.68634c0.23568,-0.88645 1.3818,-1.60479 1.3818,-1.60479l11.37587,-7.4508c0,0 0.94021,-0.44115 1.95083,-0.30883c1.01062,0.13232 1.48603,0.7588 1.48603,0.7588l2.91318,4.38016l3.71041,-2.4558c0,0 1.20668,-1.06471 2.36543,-0.75953c1.15875,0.30518 2.06998,1.9277 2.06998,1.9277l8.38832,12.80728c0,0 0.80713,0.99193 0.51367,1.93485c-0.29346,0.94292 -1.69614,1.8645 -1.69614,1.8645l-17.5535,11.49693c0,0 -0.84645,0.72234 -1.74791,0.55272c-0.90146,-0.16962 -1.45671,-1.15571 -1.45671,-1.15571l-13.22393,-20.19029c0,0 -0.71301,-0.91072 -0.47733,-1.79717z" fill="#808080" stroke-width="2.5" stroke-linecap="butt"/><path d="M222.71438,151.86408l1.66158,-2.29943c0,0 0.29577,-0.51615 0.8101,-0.42831c0.51432,0.08784 0.84501,0.57894 0.84501,0.57894l2.13509,3.25986c0,0 0.4565,0.49363 0.12356,0.89987c-0.33294,0.40624 -0.80883,0.33431 -0.80883,0.33431l-4.36756,-0.99331c0,0 -0.45523,-0.05493 -0.5978,-0.57908c-0.14257,-0.52415 0.19885,-0.77285 0.19885,-0.77285z" fill="#000000" stroke-width="0" stroke-linecap="round"/><path d="M235.98925,160.92054c0,0 1.59899,0.01763 2.39713,1.54944c0.91402,1.75423 0.08999,3.6747 0.08999,3.6747" fill="none" stroke-width="2.5" stroke-linecap="round"/><path d="M230.9418,153.28484c0,0 2.08976,0.01205 3.3326,1.55091c1.08527,1.34376 0.46247,2.81658 0.46247,2.81658" fill="none" stroke-width="2.5" stroke-linecap="round"/></g><path d="M245.56025,157.7944c3.70209,-2.42474 8.66887,-1.38924 11.09361,2.31285c2.42474,3.70209 1.38924,8.66887 -2.31285,11.09361c-3.70209,2.42474 -8.66887,1.38924 -11.09361,-2.31285c-2.42474,-3.70209 -1.38924,-8.66887 2.31285,-11.09361z" fill="#808080" stroke-width="2.5" stroke-linecap="butt"/></g><path d="M186.26191,130.33753l3.51416,2.24547c0,0 0.71557,0.4947 0.9377,1.29922c0.22213,0.80452 -0.17194,1.47422 -0.17194,1.47422l-5.35459,8.37993c0,0 -0.47816,0.66549 -1.21584,0.80719c-0.73767,0.14171 -1.53257,-0.27922 -1.53257,-0.27922l-3.60427,-2.30305z" fill="#ffadad" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><path d="M174.2315,136.0843l3.89936,-1.47868c0,0 0.82406,-0.27873 1.60209,0.02336c0.77803,0.30209 1.08004,1.01804 1.08004,1.01804l3.52607,9.29847c0,0 0.24842,0.7809 -0.07828,1.45729c-0.32671,0.67639 -1.13894,1.0628 -1.13894,1.0628l-3.99934,1.51659z" fill="#ffadad" stroke="#000000" stroke-width="2.5" stroke-linecap="butt"/><g stroke="#000000" stroke-width="3.5" stroke-linecap="butt"><path d="M155.90063,235.4133c-2.06303,-2.18206 -1.71327,-6.42534 -1.71327,-6.42534v-48.06771h147.0011v48.06771c0,0 0.18044,3.8273 -2.05594,6.08267c-2.23637,2.2554 -6.01402,2.05591 -6.01402,2.05591h-131.23657c0,0 -3.91827,0.46879 -5.98131,-1.71327z" fill="#ed1c24"/><path d="M268.38002,235.50207c-2.06303,-2.18206 -1.71327,-6.42534 -1.71327,-6.42534v-48.06771h34.61052v48.06771c0,0 0.18044,3.8273 -2.05594,6.08267c-2.23637,2.2554 -6.01402,2.05591 -6.01402,2.05591h-18.84599c0,0 -3.91827,0.46879 -5.98131,-1.71327z" fill="#880015"/><path d="M186.17615,201.7866h-8.14866c0,0 -2.55629,-0.83026 -3.57884,-2.13137c-1.02257,-1.30111 -1.25624,-4.02073 -1.25624,-4.02073l-0.06914,-13.85317h18.31224l-0.13259,14.15827c0,0 0.07154,2.45576 -1.09363,4.07087c-1.57696,2.18589 -4.03315,1.77614 -4.03315,1.77614z" fill="#ffffff"/><path d="M234.82123,201.24092h-8.14866c0,0 -2.55629,-0.83026 -3.57884,-2.13137c-1.02257,-1.30111 -1.25624,-4.02073 -1.25624,-4.02073l-0.06914,-13.85317h18.31224l-0.13259,14.15827c0,0 0.07154,2.45576 -1.09363,4.07087c-1.57696,2.18589 -4.03315,1.77614 -4.03315,1.77614z" fill="#ffffff"/></g></g></g></svg>
+            </div>
+            <h2 style="color:var(--perm-gold); font-family:'Consolas', monospace; margin: 0;">¿Todo listo?</h2>
+            <h1 style="color:#fff; margin: 10px 0 20px 0;">¡Buena suerte, programador!</h1>
+            <p style="color:#bbb; max-width: 600px; margin: 0 auto 20px auto; line-height: 1.6;">
+                <strong>Mailo</strong> te confirma que todos los buffers han sido reservados y los hilos de mensajes están en escucha. Has domado la complejidad de las ventanas nativas y ahora el lienzo de píxeles es completamente tuyo.
+            </p>
+            <p style="color:#888; font-style: italic; font-size: 0.9em;" id="frases_estupidas_de_mailo"></p>
+        </div>`
+    };
+    const frases = [
+        "\"Recuerda: Un gran buffer de píxeles conlleva una gran responsabilidad de liberación de memoria.\"",
+        "\"Nada mal, para un roedor como tú.\"",
+        "\"Consultar a un puntero nulo, hace que tu programa se vaya a montar unicornios... Dicen.\"",
+        "\"Los pixeles entre ventanas son como los cepillos de dientes, no se comparten.\""
+    ];
+    function toggleMenu(id, contentKey, element){
+        const subs = document.getElementsByClassName("submenu");
+        for(let s of subs){ if(s.id !== id) s.style.display = "none"; }
+        const folds = document.getElementsByClassName("active-menu");
+        for(let f of folds){ if(f.id !== id){
+            f.classList.remove('active-menu');
+            f.querySelector('span').innerHTML = "▸";
+        } }
+        const menu = document.getElementById(id);
+        const isVisible = menu.style.display === "block";
+        menu.style.display = isVisible ? "none" : "block";
+        element.querySelector('span').innerText = isVisible ? "▸" : "▼";
+        if(isVisible){ element.classList.remove('active-menu'); }
+        else         { element.classList.add('active-menu'); }
+        load(contentKey);
+    }
+    function load(key){
+        const allLi = document.querySelectorAll('#main-nav li');
+        allLi.forEach(li => li.classList.remove('active-menu'));
+        docu.innerHTML = content[key] || `Contenido en desarrollo...`;
+        docu.scrollTop = 0;
+        const mailo_boca = document.getElementById("frases_estupidas_de_mailo");
+        if(mailo_boca) mailo_boca.innerHTML = frases[Math.floor(Math.random() * (frases.length - 0.5))];
+    }
+    load('intro');
+</script>
