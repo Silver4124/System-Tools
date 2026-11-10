@@ -1,0 +1,117 @@
+# Compila los ejemplos en los dos sistemas que la libreria soporta y corre solo
+# los ejemplos sin interfaz: los demas abren ventanas, sueltan audio o esperan
+# teclado, y en un runner sin sesion se colgarian.
+# Builds every example on the two systems the library supports, and runs only the
+# interface-free ones: the rest open windows, play audio or wait for the keyboard.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  examples:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        std: [c++11, c++20]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # El runner de Windows trae MSYS2 en C:\msys64; UCRT64 es el entorno con el
+      # que se prueba la libreria a mano, y `make` vive en el subconjunto usr/bin.
+      - name: Toolchain (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "C:/msys64/ucrt64/bin" >> "$GITHUB_PATH"
+          echo "C:/msys64/usr/bin" >> "$GITHUB_PATH"
+
+      - name: Toolchain (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y g++ make
+
+      - name: Versions
+        shell: bash
+        run: g++ --version && make --version
+
+      - name: Build every example
+        shell: bash
+        run: make CXXFLAGS="-std=${{ matrix.std }} -O2"
+
+      - name: Run the interface-free examples
+        shell: bash
+        run: |
+          ext=""
+          [ "$RUNNER_OS" = "Windows" ] && ext=".exe"
+          failed=""
+          for e in defaults/hello_output defaults/text_convert defaults/dynamic_symbols defaults/run_system \
+                   console/color_text console/console_paths console/cursor_draw console/unicode_mode \
+                   memory/blocks memory/compare thread/run_join thread/cancel \
+                   json/build_object json/parse_walk \
+                   file/write_read file/append_gets file/copy_move file/folder_walk \
+                   file/handle_dump file/paths file/remove_handle file/timestamps; do
+            echo "::group::$e"
+            "bin/$e$ext"
+            st=$?
+            echo "::endgroup::"
+            if [ "$st" -ne 0 ]; then
+              echo "::error::$e salio con $st / exited with $st"
+              failed="$failed $e($st)"
+            fi
+          done
+          if [ -n "$failed" ]; then
+            echo "ejemplos rotos / broken examples:$failed"
+            exit 1
+          fi
+
+      # Ningun ejemplo de window/, sound/ ni los dialogos de message() se ejecutan
+      # aqui: se comprueban compilando, y eso es todo lo que este CI puede afirmar.
+      - name: Check nothing leaked on disk
+        shell: bash
+        run: |
+          left=$(find . -name 'st_*' -o -name '*.tmp' | head)
+          if [ -n "$left" ]; then
+            echo "residuos de los ejemplos / example leftovers:"
+            echo "$left"
+            exit 1
+          fi
+
+      - name: CMake configure and build
+        shell: bash
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+
+      # Proyecto de usuario: la libreria consumida desde fuera del repositorio,
+      # con add_subdirectory y sin recompilar ningun ejemplo.
+      - name: CMake as a user dependency
+        shell: bash
+        run: |
+          mkdir -p user_project
+          cat > user_project/CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.16)
+          project(user LANGUAGES CXX)
+          add_subdirectory(.. system_tools_build)
+          add_executable(user main.cpp)
+          target_link_libraries(user PRIVATE System_Tools)
+          EOF
+          cat > user_project/main.cpp <<'EOF'
+          #include "System_Tools.h"
+          using namespace System_Tools;
+          int main(){
+              BYTE* block = (BYTE*)memory::alloc(64);
+              if(!block) return 1;
+              block[0] = 7;
+              // szlen entrega la capacidad utilizable, casi siempre mayor que lo pedido.
+              UWORD capacity = memory::szlen(block);
+              memory::free(block);
+              return capacity >= 64 ? 0 : 2;
+          }
+          EOF
+          cmake -S user_project -B user_project/build -DST_BUILD_EXAMPLES=OFF
+          cmake --build user_project/build --target user

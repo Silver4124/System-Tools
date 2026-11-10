@@ -1,0 +1,39 @@
+# Normalizacion de fines de linea para un repo que se espera clonar en los dos sistemas
+# que la libreria soporta: Windows y Linux (la cabecera rechaza cualquier otro con #error).
+# Medido sobre el arbol de hoy: 220 ficheros de texto, 158 en LF puro y 62 en CRLF puro.
+# De esos 62, 61 son de documentacion markdown y solo uno es codigo: examples/window/line_draw.cpp.
+# Ninguno de los dos fuentes de la libreria lleva CR.
+# Como aun no hay repositorio git, este es el momento barato de decidir la politica: se
+# guarda LF en el historial y cada quien recibe el suyo al hacer checkout.
+* text=auto
+
+# Fuentes de la libreria y de los ejemplos: LF en el historial, native al salir.
+*.h    text
+*.cpp  text
+*.md   text
+
+# El Makefile va en LF fijo incluso en Windows: GNU Make en Linux come los \r del final de
+# linea de las recetas y el fallo sale como "command not found" con nombres que si existen.
+Makefile        text eol=lf
+*.mk            text eol=lf
+CMakeLists.txt  text eol=lf
+
+# Scripts auxiliares y definiciones de CI: LF siempre, si no el kernel rechaza el shebang
+# y GitHub Actions no perdona los \r dentro de un paso de shell.
+*.sh    text eol=lf
+*.bash  text eol=lf
+*.yml   text eol=lf
+
+# Lo que no es texto: sin conversiones, sin avisos de "binary added".
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
+*.wav    binary
+*.zip    binary
+
+# Difuntos: la documentacion no cuenta como codigo al medir el lenguaje del repo, si no
+# GitHub anunciaria "Markdown" por delante de C++ (documentation/ pesa mas que el modulo).
+*.md  linguist-documentation

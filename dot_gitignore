@@ -1,0 +1,53 @@
+# System Tools: lo que nunca debe entrar en el repositorio.
+# El arbol real solo tiene cuatro cosas de verdad: System_Tools.h, System_Tools.cpp,
+# documentation/ y examples/. Todo lo demas de aqui abajo es salida de compilar o
+# residuo de ejecutar un ejemplo a medias.
+
+# Binarios de los ejemplos: bin/ del Makefile y bin/ del CMake (CMAKE_BINARY_DIR/bin).
+bin/
+build/
+out/
+
+# Objectos y ejecutables sueltos, en cualquier carpeta.
+*.o
+*.obj
+*.d
+*.exe
+*.out
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+
+# Residuos de las corridas: cada ejemplo se crea y se borra a si mismo, pero si la
+# corrida se interrumpe a mitad quedan estos st_* detras del ejemplo. La regla es el
+# prefijo a secas, porque asi cubre fichero, carpeta y cualquier extension nueva que
+# un ejemplo invente manana; el CI busca exactamente lo mismo con find -name 'st_*'.
+st_*
+
+# Basura de CMake.
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+Makefile.in
+
+# Editores y sistema operativo.
+.vscode/
+.idea/
+.qoder/
+*.swp
+*.swo
+*~
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Entornos locales: si alguien prueba la libreria dentro de un venv o un node_modules
+# propio, o guarda notas de su maquina, que no se cuele.
+.env
+venv/
+node_modules/
